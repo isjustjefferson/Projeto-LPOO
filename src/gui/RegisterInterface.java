@@ -16,15 +16,15 @@ public class RegisterInterface extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JPasswordField passwordField;
-	private JPasswordField passwordField_1;
-	private JTextField textField;
-	private JTextField textField_2;
-	private JLabel lblNewLabel_1;
-	private JLabel lblNewLabel_2;
-	private JLabel lblNewLabel_3;
-	private JLabel lblNewLabel_4;
-	private JLabel lblNewLabel_5;
+	private JPasswordField senhaField;
+	private JPasswordField confirmacaoSenhaField;
+	private JTextField nomeField;
+	private JTextField emailField;
+	private JLabel nomeLabel;
+	private JLabel cadastroLabel;
+	private JLabel emailLabel;
+	private JLabel senhaLabel;
+	private JLabel confirmacaoSenhaLabel;
 
 	/**
 	 * Launch the application.
@@ -58,48 +58,48 @@ public class RegisterInterface extends JFrame {
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
-		JButton btnNewButton = new JButton("Cadastrar");
-		btnNewButton.setBounds(109, 279, 104, 21);
-		panel.add(btnNewButton);
+		JButton cadastrarButton = new JButton("Cadastrar");
+		cadastrarButton.setBounds(109, 279, 104, 21);
+		panel.add(cadastrarButton);
 		
-		passwordField = new JPasswordField();
-		passwordField.setBounds(89, 186, 145, 21);
-		panel.add(passwordField);
+		senhaField = new JPasswordField();
+		senhaField.setBounds(89, 186, 145, 21);
+		panel.add(senhaField);
 		
-		passwordField_1 = new JPasswordField();
-		passwordField_1.setBounds(89, 240, 145, 19);
-		panel.add(passwordField_1);
+		confirmacaoSenhaField = new JPasswordField();
+		confirmacaoSenhaField.setBounds(89, 240, 145, 19);
+		panel.add(confirmacaoSenhaField);
 		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(89, 84, 145, 21);
-		panel.add(textField);
+		nomeField = new JTextField();
+		nomeField.setColumns(10);
+		nomeField.setBounds(89, 84, 145, 21);
+		panel.add(nomeField);
 		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBounds(89, 138, 145, 21);
-		panel.add(textField_2);
+		emailField = new JTextField();
+		emailField.setColumns(10);
+		emailField.setBounds(89, 138, 145, 21);
+		panel.add(emailField);
 		
-		lblNewLabel_1 = new JLabel("NOME");
-		lblNewLabel_1.setBounds(89, 61, 45, 13);
-		panel.add(lblNewLabel_1);
+		nomeLabel = new JLabel("NOME");
+		nomeLabel.setBounds(89, 61, 45, 13);
+		panel.add(nomeLabel);
 		
-		lblNewLabel_2 = new JLabel("Cadastre-se");
-		lblNewLabel_2.setFont(new Font("SansSerif", Font.PLAIN, 16));
-		lblNewLabel_2.setBounds(110, 25, 103, 13);
-		panel.add(lblNewLabel_2);
+		cadastroLabel = new JLabel("Cadastre-se");
+		cadastroLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
+		cadastroLabel.setBounds(110, 25, 103, 13);
+		panel.add(cadastroLabel);
 		
-		lblNewLabel_3 = new JLabel("EMAIL");
-		lblNewLabel_3.setBounds(89, 115, 45, 13);
-		panel.add(lblNewLabel_3);
+		emailLabel = new JLabel("EMAIL");
+		emailLabel.setBounds(89, 115, 45, 13);
+		panel.add(emailLabel);
 		
-		lblNewLabel_4 = new JLabel("SENHA");
-		lblNewLabel_4.setBounds(89, 169, 45, 13);
-		panel.add(lblNewLabel_4);
+		senhaLabel = new JLabel("SENHA");
+		senhaLabel.setBounds(89, 169, 45, 13);
+		panel.add(senhaLabel);
 		
-		lblNewLabel_5 = new JLabel("CONFIRMAR A SENHA");
-		lblNewLabel_5.setBounds(89, 217, 111, 13);
-		panel.add(lblNewLabel_5);
+		confirmacaoSenhaLabel = new JLabel("CONFIRMAR A SENHA");
+		confirmacaoSenhaLabel.setBounds(89, 217, 111, 13);
+		panel.add(confirmacaoSenhaLabel);
 
 	}
 }
