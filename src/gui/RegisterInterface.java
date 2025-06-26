@@ -11,20 +11,22 @@ import javax.swing.JButton;
 import javax.swing.JPasswordField;
 import java.awt.Font;
 import javax.swing.SwingConstants;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class RegisterInterface extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-	private JPasswordField senhaField;
-	private JPasswordField confirmacaoSenhaField;
-	private JTextField nomeField;
-	private JTextField emailField;
-	private JLabel nomeLabel;
-	private JLabel cadastroLabel;
-	private JLabel emailLabel;
-	private JLabel senhaLabel;
-	private JLabel confirmacaoSenhaLabel;
+	private JPanel CadastroContentPane;
+	private JPasswordField SenhaRegisterField;
+	private JPasswordField ConfirmacaoSenhaRegisterField;
+	private JTextField NomeRegisterField;
+	private JTextField EmailRegisterField;
+	private JLabel NomeRegisterLabel;
+	private JLabel CadastroRegisterLabel;
+	private JLabel EmailRegisterLabel;
+	private JLabel SenhaRegisterLabel;
+	private JLabel ConfirmacaoSenhaRegisterLabel;
 
 	/**
 	 * Launch the application.
@@ -48,58 +50,68 @@ public class RegisterInterface extends JFrame {
 	public RegisterInterface() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 785, 477);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
+		CadastroContentPane = new JPanel();
+		CadastroContentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(CadastroContentPane);
+		CadastroContentPane.setLayout(null);
 		
-		JPanel panel = new JPanel();
-		panel.setBounds(218, 48, 334, 344);
-		contentPane.add(panel);
-		panel.setLayout(null);
+		JPanel CadastroRegisterPanel = new JPanel();
+		CadastroRegisterPanel.setBounds(218, 48, 334, 344);
+		CadastroContentPane.add(CadastroRegisterPanel);
+		CadastroRegisterPanel.setLayout(null);
 		
-		JButton cadastrarButton = new JButton("Cadastrar");
-		cadastrarButton.setBounds(109, 279, 104, 21);
-		panel.add(cadastrarButton);
+		JButton CadastrarButton = new JButton("Cadastrar");
+		CadastrarButton.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        // Abre a tela de login
+		        LoginInterface loginFrame = new LoginInterface();
+		        loginFrame.setVisible(true);
+
+		        // Fecha a tela atual de cadastro
+		        dispose();
+		    }
+		});
+		CadastrarButton.setBounds(115, 279, 104, 21);
+		CadastroRegisterPanel.add(CadastrarButton);
 		
-		senhaField = new JPasswordField();
-		senhaField.setBounds(89, 186, 145, 21);
-		panel.add(senhaField);
+		SenhaRegisterField = new JPasswordField();
+		SenhaRegisterField.setBounds(89, 186, 145, 21);
+		CadastroRegisterPanel.add(SenhaRegisterField);
 		
-		confirmacaoSenhaField = new JPasswordField();
-		confirmacaoSenhaField.setBounds(89, 240, 145, 19);
-		panel.add(confirmacaoSenhaField);
+		ConfirmacaoSenhaRegisterField = new JPasswordField();
+		ConfirmacaoSenhaRegisterField.setBounds(89, 240, 145, 19);
+		CadastroRegisterPanel.add(ConfirmacaoSenhaRegisterField);
 		
-		nomeField = new JTextField();
-		nomeField.setColumns(10);
-		nomeField.setBounds(89, 84, 145, 21);
-		panel.add(nomeField);
+		NomeRegisterField = new JTextField();
+		NomeRegisterField.setColumns(10);
+		NomeRegisterField.setBounds(89, 84, 145, 21);
+		CadastroRegisterPanel.add(NomeRegisterField);
 		
-		emailField = new JTextField();
-		emailField.setColumns(10);
-		emailField.setBounds(89, 138, 145, 21);
-		panel.add(emailField);
+		EmailRegisterField = new JTextField();
+		EmailRegisterField.setColumns(10);
+		EmailRegisterField.setBounds(89, 138, 145, 21);
+		CadastroRegisterPanel.add(EmailRegisterField);
 		
-		nomeLabel = new JLabel("NOME");
-		nomeLabel.setBounds(89, 61, 45, 13);
-		panel.add(nomeLabel);
+		NomeRegisterLabel = new JLabel("NOME");
+		NomeRegisterLabel.setBounds(89, 61, 45, 13);
+		CadastroRegisterPanel.add(NomeRegisterLabel);
 		
-		cadastroLabel = new JLabel("Cadastre-se");
-		cadastroLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
-		cadastroLabel.setBounds(110, 25, 103, 13);
-		panel.add(cadastroLabel);
+		CadastroRegisterLabel = new JLabel("Cadastre-se");
+		CadastroRegisterLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
+		CadastroRegisterLabel.setBounds(110, 25, 103, 13);
+		CadastroRegisterPanel.add(CadastroRegisterLabel);
 		
-		emailLabel = new JLabel("EMAIL");
-		emailLabel.setBounds(89, 115, 45, 13);
-		panel.add(emailLabel);
+		EmailRegisterLabel = new JLabel("EMAIL");
+		EmailRegisterLabel.setBounds(89, 115, 45, 13);
+		CadastroRegisterPanel.add(EmailRegisterLabel);
 		
-		senhaLabel = new JLabel("SENHA");
-		senhaLabel.setBounds(89, 169, 45, 13);
-		panel.add(senhaLabel);
+		SenhaRegisterLabel = new JLabel("SENHA");
+		SenhaRegisterLabel.setBounds(89, 169, 45, 13);
+		CadastroRegisterPanel.add(SenhaRegisterLabel);
 		
-		confirmacaoSenhaLabel = new JLabel("CONFIRMAR A SENHA");
-		confirmacaoSenhaLabel.setBounds(89, 217, 111, 13);
-		panel.add(confirmacaoSenhaLabel);
+		ConfirmacaoSenhaRegisterLabel = new JLabel("CONFIRMAR A SENHA");
+		ConfirmacaoSenhaRegisterLabel.setBounds(89, 217, 111, 13);
+		CadastroRegisterPanel.add(ConfirmacaoSenhaRegisterLabel);
 
 	}
 }

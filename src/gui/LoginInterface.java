@@ -13,6 +13,8 @@ import javax.swing.JButton;
 import java.awt.Insets;
 import javax.swing.border.EtchedBorder;
 import javax.swing.JPasswordField;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class LoginInterface extends JFrame {
 
@@ -83,6 +85,13 @@ public class LoginInterface extends JFrame {
 		contentPane.add(passwordLoginField);
 		
 		JButton cadastrarBtn = new JButton("cadastrar-se");
+		cadastrarBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				RegisterInterface RegisterFrame = new RegisterInterface();
+				RegisterFrame.setVisible(true);
+				dispose();
+			}
+		});
 		cadastrarBtn.setFont(new Font("Dialog", Font.PLAIN, 12));
 		cadastrarBtn.setMargin(new Insets(2, 2, 2, 2));
 		cadastrarBtn.setForeground(new Color(255, 255, 255));
@@ -92,6 +101,14 @@ public class LoginInterface extends JFrame {
 		contentPane.add(cadastrarBtn);
 		
 		JButton redefinirsenhaBtn = new JButton("redefinir senha");
+		redefinirsenhaBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				RecuperacaoSenhaInterface RecuperacaoFrame = new RecuperacaoSenhaInterface();
+				RecuperacaoFrame.setVisible(true);
+				dispose();
+				
+			}
+		});
 		redefinirsenhaBtn.setBorderPainted(false);
 		redefinirsenhaBtn.setMargin(new Insets(2, 2, 2, 2));
 		redefinirsenhaBtn.setContentAreaFilled(false);
