@@ -42,6 +42,5 @@ public class User {
     public void setCodigoValidacao(String codigoValidacao) {
         this.codigoValidacao = codigoValidacao;
     }
-    
-    
+        
 }
