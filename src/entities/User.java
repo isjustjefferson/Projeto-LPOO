@@ -3,12 +3,12 @@ package entities;
 public class User {
     private String name;
     private String email;
-    private String senha;
-    private String codigoValidacao;
+    private String password;
     
-    public User (String name, String senha){
+    public User (String name, String email, String password){
         this.name=name;
-        this.senha=senha;
+        this.email=email;
+        this.password=password;
     }
 
     public String getName() {
@@ -27,20 +27,13 @@ public class User {
         this.email = email;
     }
 
-    public String getSenha() {
-        return senha;
+    public String getPassword() {
+        return password;
     }
 
-    public void setSenha(String senha) {
-        this.senha = senha;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public String getCodigoValidacao() {
-        return codigoValidacao;
-    }
-
-    public void setCodigoValidacao(String codigoValidacao) {
-        this.codigoValidacao = codigoValidacao;
-    }
         
 }

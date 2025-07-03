@@ -10,7 +10,7 @@ public class AccountRepository extends DataBaseConnection implements Repository<
     }
 
     @Override
-    public boolean confirm(Account entity) {
+    public boolean confirm(String string) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
