@@ -1,22 +1,22 @@
 package entities;
 
 public class User {
-    private String name;
+    private String nome;
     private String email;
-    private String password;
+    private String senha;
     
-    public User (String name, String email, String password){
-        this.name=name;
+    public User (String nome, String email, String senha){
+        this.nome=nome;
         this.email=email;
-        this.password=password;
+        this.senha=senha;
     }
 
-    public String getName() {
-        return name;
+    public String getNome() {
+        return nome;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public String getEmail() {
@@ -27,13 +27,11 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getSenha() {
+        return senha;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
-
-        
 }

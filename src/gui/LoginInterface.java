@@ -1,11 +1,15 @@
 package gui;
 
+import business.UserController;
+import exception.BusinessException;
+import exception.SystemException;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
+import java.awt.Component;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
@@ -15,6 +19,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JOptionPane;
 
 public class LoginInterface extends JFrame {
 
@@ -38,6 +43,7 @@ public class LoginInterface extends JFrame {
 			}
 		});
 	}
+    private Component frame;
 
 	/**
 	 * Create the frame.
@@ -75,6 +81,29 @@ public class LoginInterface extends JFrame {
 		usernameLoginField.setColumns(10);
 		
 		JButton confirmarLoginBtn = new JButton("CONFIRMAR");
+                confirmarLoginBtn.addActionListener(new ActionListener() 
+                {
+                    public void actionPerformed(ActionEvent e) {
+                        
+                        String email = usernameLoginField.getText();
+                        String senha = passwordLoginField.getText();
+
+                        try {
+                            
+                            UserController controller = new UserController();
+                            controller.confirmaUsuario(email, senha);
+                     
+                            JOptionPane.showMessageDialog(LoginInterface.this.frame, "Usuário encontrado.", "Login", JOptionPane.INFORMATION_MESSAGE);
+                            
+                        }catch (BusinessException be){
+                            JOptionPane.showMessageDialog(LoginInterface.this.frame, be.getMessage(), "Login", JOptionPane.ERROR_MESSAGE);
+                        } catch (SystemException se) {
+                            JOptionPane.showMessageDialog(LoginInterface.this.frame, se.getMessage(), "Login", JOptionPane.ERROR_MESSAGE);
+                        }
+                        
+                        dispose();
+                    }
+                });
 		confirmarLoginBtn.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
 		confirmarLoginBtn.setMargin(new Insets(2, 2, 2, 2));
 		confirmarLoginBtn.setBounds(173, 184, 110, 24);
@@ -87,8 +116,8 @@ public class LoginInterface extends JFrame {
 		JButton cadastrarBtn = new JButton("cadastrar-se");
 		cadastrarBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				RegisterInterface RegisterFrame = new RegisterInterface();
-				RegisterFrame.setVisible(true);
+				RegisterInterface registerFrame = new RegisterInterface();
+				registerFrame.setVisible(true);
 				dispose();
 			}
 		});

@@ -7,13 +7,13 @@ import exception.BusinessException;
 
 public class UserController {
     
-    public void registerUser(String name, String email, String password, String passwordConfirmation){
+    public void registraUsuario(String nome, String email, String senha, String confirmacaoSenha){
         
-        if (name.isBlank()){
+        if (nome.isBlank()){
             throw new BusinessException("Os campos não podem estar vazios.");
         }
         
-        if (name.length()<4){
+        if (nome.length()<4){
             throw new BusinessException("O nome deve ter 4 caracteres ou mais.");
         }
         
@@ -21,19 +21,19 @@ public class UserController {
             throw new BusinessException("Os campos não podem estar vazios.");
         }
         
-        if (password.isBlank()){
+        if (senha.isBlank()){
             throw new BusinessException("Os campos não podem estar vazios.");
         }
         
-        if (password.length()<8){
+        if (senha.length()<8){
             throw new BusinessException("A senha deve ter 8 caracteres ou mais.");
         }
         
-        if (!password.equals(passwordConfirmation)){
+        if (!senha.equals(confirmacaoSenha)){
             throw new BusinessException("A senha precisa ser igual a confirmação.");
         }
    
-        User user = new User (name, email, password);
+        User user = new User (nome, email, senha);
         Repository repository = new UserRepository();
         boolean exists = repository.confirm(email);
         
@@ -42,5 +42,23 @@ public class UserController {
         }
         
         repository.insert(user);
+    }
+    
+    public void confirmaUsuario(String email, String senha){
+        
+        if (email.isBlank()){
+            throw new BusinessException("Os campos não podem estar vazios.");
+        }
+        
+        if (senha.isBlank()){
+            throw new BusinessException("Os campos não podem estar vazios.");
+        }
+        
+        UserRepository repository = new UserRepository();
+        boolean exists = repository.login(email, senha);
+        
+        if (!exists){
+            throw new BusinessException ("Usuário não encontrado.");
+        }
     }
 }
