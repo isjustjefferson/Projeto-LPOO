@@ -1,36 +1,60 @@
 package com.projetolpoo.entities;
 
-public class Account {
-    private double revenues;
-    private double expenses;
-    private double balance;
+import java.io.Serializable; 
+import java.util.ArrayList;
+import java.util.List;
+
+public class Account implements Serializable { 
+
+    private static final long serialVersionUID = 1L; 
     
-    public Account (double revenues, double expenses){
-        this.revenues=revenues;
-        this.expenses=expenses;
+    private double balance; 
+    
+    
+    private List<Meta> metas = new ArrayList<>();
+    private List<Transacao> transacoes = new ArrayList<>();
+
+    
+    public Account() {
+        this.balance = 0.0; 
     }
 
-    public double getRevenues() {
-        return revenues;
+   
+    public void adicionarTransacao(Transacao transacao) {
+        if (transacao != null) {
+            this.transacoes.add(transacao);
+            this.balance += transacao.getValor();
+        }
     }
 
-    public void setRevenues(double revenues) {
-        this.revenues = revenues;
+    public void adicionarMeta(Meta meta) {
+        if (meta != null) {
+            this.metas.add(meta);
+        }
     }
 
-    public double getExpenses() {
-        return expenses;
-    }
-
-    public void setExpenses(double expenses) {
-        this.expenses = expenses;
-    }
 
     public double getBalance() {
         return balance;
     }
 
-    public void setBalance() {
-        balance = revenues - expenses;
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+
+    public List<Meta> getMetas() {
+        return metas;
+    }
+
+    public void setMetas(List<Meta> metas) {
+        this.metas = metas;
+    }
+
+    public List<Transacao> getTransacoes() {
+        return transacoes;
+    }
+
+    public void setTransacoes(List<Transacao> transacoes) {
+        this.transacoes = transacoes;
     }
 }

@@ -2,6 +2,17 @@ package com.projetolpoo.gui;
 
 import java.awt.EventQueue;
 
+import org.jfree.chart.ui.RectangleAnchor;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.ValueMarker;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.data.time.Day;
+import org.jfree.data.time.TimeSeries;
+import org.jfree.data.time.TimeSeriesCollection;
+import java.awt.BorderLayout; 
+import java.time.LocalDate; 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -14,17 +25,29 @@ import java.awt.Insets;
 import java.awt.Component;
 import javax.swing.JToggleButton;
 import java.awt.Rectangle;
+import java.util.List;
+
 import javax.swing.JRadioButton;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
+
+import com.projetolpoo.entities.Account;
+import com.projetolpoo.entities.Meta;
+import com.projetolpoo.entities.Transacao;
+
 import java.awt.Color;
 import javax.swing.JSlider;
+import javax.swing.JComboBox;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class DashboardInterface extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JButton btnNewButton_4;
+	private JComboBox<Object> comboBoxMetas;
+	private JPanel graficoPanel;
 
 	/**
 	 * Launch the application.
@@ -74,11 +97,6 @@ public class DashboardInterface extends JFrame {
 		contentPane.add(functionsDashboard);
 		functionsDashboard.setLayout(null);
 		
-		JToggleButton toggleBtnMetas = new JToggleButton("Metas");
-		toggleBtnMetas.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		toggleBtnMetas.setBounds(7, 10, 85, 21);
-		functionsDashboard.add(toggleBtnMetas);
-		
 		JButton relatorioBtn = new JButton("Relatório");
 		relatorioBtn.setMargin(new Insets(2, 2, 2, 2));
 		relatorioBtn.setBounds(7, 279, 85, 21);
@@ -86,16 +104,33 @@ public class DashboardInterface extends JFrame {
 		relatorioBtn.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
 		JButton removerBtn = new JButton("Remover");
-		removerBtn.setBounds(7, 185, 85, 21);
+		removerBtn.setBounds(7, 248, 85, 21);
 		functionsDashboard.add(removerBtn);
 		removerBtn.setMargin(new Insets(2, 2, 2, 2));
 		removerBtn.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
 		JButton adicionarBtn = new JButton("Adicionar");
-		adicionarBtn.setBounds(7, 99, 85, 21);
+		adicionarBtn.setBounds(7, 217, 85, 21);
 		functionsDashboard.add(adicionarBtn);
 		adicionarBtn.setMargin(new Insets(2, 2, 2, 2));
 		adicionarBtn.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		
+		comboBoxMetas = new JComboBox<>();
+		comboBoxMetas.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        Object itemSelecionado = comboBoxMetas.getSelectedItem();
+
+		        if (itemSelecionado instanceof Meta) {
+		            
+		            desenharGrafico((Meta) itemSelecionado);
+		        } else {
+		         
+		            desenharGrafico(null);
+		        }
+		    }
+		});
+		comboBoxMetas.setBounds(10, 10, 82, 21);
+		functionsDashboard.add(comboBoxMetas);
 		
 		JPanel functionsDashboardPanel = new JPanel();
 		functionsDashboardPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -153,17 +188,12 @@ public class DashboardInterface extends JFrame {
 		contentPane.add(panel_4);
 		panel_4.setLayout(null);
 		
-		JPanel graficoPanel = new JPanel();
+		graficoPanel = new JPanel();
 		graficoPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		graficoPanel.setBackground(new Color(217, 217, 217));
 		graficoPanel.setBounds(10, 10, 916, 250);
 		panel_4.add(graficoPanel);
 		graficoPanel.setLayout(null);
-		
-		JLabel graficoLabel = new JLabel("Gráfico");
-		graficoLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		graficoLabel.setBounds(432, 110, 52, 29);
-		graficoPanel.add(graficoLabel);
 		
 		JPanel receitasPanel = new JPanel();
 		receitasPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -200,6 +230,89 @@ public class DashboardInterface extends JFrame {
 		btnNewButton_4_1.setMargin(new Insets(2, 2, 2, 2));
 		btnNewButton_4_1.setBounds(407, 242, 27, 21);
 		despesasPanel.add(btnNewButton_4_1);
+		
+		 atualizarMetasComboBox();
+		 desenharGrafico(null);
+		
+	}
 
+	private void atualizarMetasComboBox() {
+
+       //DADOS DE TESTE! CASO QUEIRAM USAR PARA APRESENTAR PARA CARTAXO, TIREM O COMENTARIO. 
+		/*Account contaDeTeste = new Account();
+        contaDeTeste.adicionarMeta(new Meta("Viagem", 2500.00));
+        contaDeTeste.adicionarMeta(new Meta("Notebook", 3000.00));
+        contaDeTeste.adicionarMeta(new Meta("Curso", 2000.00));
+		
+        comboBoxMetas.removeAllItems();
+        comboBoxMetas.addItem("Metas");
+        List<Meta> metas = contaDeTeste.getMetas();
+        for (Meta meta : metas) {
+            comboBoxMetas.addItem(meta);
+        
+        }
+    */
+		comboBoxMetas.addItem("Metas");
+    }
+	private void desenharGrafico(Meta metaSelecionada) {
+	    //DADOS DE TESTE! CASO QUEIRAM APRESENTAR PRA CARTAXO, RETIREM O COMENTARIO. 
+	    /*Account contaDeTeste = new Account();
+	    // Receitas
+	    contaDeTeste.adicionarTransacao(new Transacao("Salário", 3500.00, LocalDate.of(2025, 7, 5)));
+	    contaDeTeste.adicionarTransacao(new Transacao("Freelance", 800.00, LocalDate.of(2025, 7, 12)));
+	    // Despesas
+	    contaDeTeste.adicionarTransacao(new Transacao("Aluguel", -1200.00, LocalDate.of(2025, 7, 6)));
+	    contaDeTeste.adicionarTransacao(new Transacao("Internet", -150.00, LocalDate.of(2025, 7, 10)));
+	    contaDeTeste.adicionarTransacao(new Transacao("Supermercado", -600.00, LocalDate.of(2025, 7, 11)));*/
+	    //FINAL DADOS DE TESTE!
+	    
+	    TimeSeries series = new TimeSeries("Evolução do Saldo");
+	    double saldoCumulativo = 0.0;
+	    
+	    //TESTE! CASO QUEIRAM APRESENTAR PRA CARTAXO, RETIREM O COMENTARIO. 
+	    /*contaDeTeste.getTransacoes().sort((t1, t2) -> t1.getData().compareTo(t2.getData()));
+	    
+	    for (Transacao t : contaDeTeste.getTransacoes()) {
+	        saldoCumulativo += t.getValor();
+	        series.add(new Day(t.getData().getDayOfMonth(), t.getData().getMonthValue(), t.getData().getYear()), saldoCumulativo);
+	    }*/
+	    //TESTE!
+	    
+	    TimeSeriesCollection dataset = new TimeSeriesCollection();
+	    dataset.addSeries(series);
+
+	  
+	    JFreeChart chart = ChartFactory.createTimeSeriesChart(
+	            "Evolução", 
+	            "Data",              
+	            "Saldo (R$)",        
+	            dataset,
+	            false,               
+	            false,
+	            false
+	    );
+
+	    
+	    XYPlot plot = chart.getXYPlot(); 
+	    plot.clearDomainMarkers(); 
+	    
+	    if (metaSelecionada != null) {
+	        
+	        ValueMarker marker = new ValueMarker(metaSelecionada.getValorAlvo());
+	        marker.setPaint(Color.GREEN); 
+	        marker.setLabel(metaSelecionada.getNome()); 
+	        plot.addRangeMarker(marker); 
+	        marker.setLabelAnchor(RectangleAnchor.CENTER);
+	    }
+	    
+	    
+	    ChartPanel chartPanel = new ChartPanel(chart);    
+	    
+	    graficoPanel.removeAll(); 
+	    graficoPanel.setLayout(new BorderLayout()); 
+	    graficoPanel.add(chartPanel, BorderLayout.CENTER); 
+	    
+	    graficoPanel.revalidate(); 
+	    graficoPanel.repaint(); 
 	}
 }
