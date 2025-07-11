@@ -1,7 +1,6 @@
 package com.projetolpoo.gui;
 
 import java.awt.EventQueue;
-
 import org.jfree.chart.ui.RectangleAnchor;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -26,15 +25,12 @@ import java.awt.Component;
 import javax.swing.JToggleButton;
 import java.awt.Rectangle;
 import java.util.List;
-
 import javax.swing.JRadioButton;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
-
 import com.projetolpoo.entities.Account;
 import com.projetolpoo.entities.Meta;
 import com.projetolpoo.entities.Transacao;
-
 import java.awt.Color;
 import javax.swing.JSlider;
 import javax.swing.JComboBox;

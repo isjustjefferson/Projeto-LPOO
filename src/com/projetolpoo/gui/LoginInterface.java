@@ -1,5 +1,6 @@
 package com.projetolpoo.gui;
 
+
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
@@ -7,7 +8,6 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
-
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -19,7 +19,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
-
 import com.projetolpoo.business.UserController;
 import com.projetolpoo.exception.BusinessException;
 import com.projetolpoo.exception.SystemException;
@@ -110,6 +109,13 @@ public class LoginInterface extends JFrame {
                 String senha = new String(senhaChars);
                 boolean manterConectado = manterConectadoCheckBox.isSelected();
 
+                if(email.isEmpty() || senha.isEmpty()) {
+                    JOptionPane.showMessageDialog(LoginInterface.this, 
+                        "Por favor, preencha todos os campos!", "Erro", JOptionPane.ERROR_MESSAGE);
+                    Arrays.fill(senhaChars, ' ');
+                    return;
+                }
+
                 try {
                     UserController controller = new UserController();
                     controller.confirmaUsuario(email, senha);
@@ -117,15 +123,18 @@ public class LoginInterface extends JFrame {
                     if(manterConectado) {
                     }
                     
-                    JOptionPane.showMessageDialog(LoginInterface.this, "Login realizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(LoginInterface.this, 
+                        "Login realizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                    dispose();
                 } catch (BusinessException be) {
-                    JOptionPane.showMessageDialog(LoginInterface.this, be.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(LoginInterface.this, 
+                        be.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
                 } catch (SystemException se) {
-                    JOptionPane.showMessageDialog(LoginInterface.this, se.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(LoginInterface.this, 
+                        se.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
                 } finally {
                     Arrays.fill(senhaChars, ' ');
                 }
-                dispose();
             }
         });
         confirmarLoginBtn.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));

@@ -1,35 +1,34 @@
 package com.projetolpoo.gui;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
+import java.awt.BorderLayout;
 import java.awt.Color;
-
-import javax.swing.JLabel;
-
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
-
-import javax.swing.JTextField;
-import javax.swing.JButton;
-
 import java.awt.Insets;
-
-import javax.swing.border.EtchedBorder;
-import javax.swing.JPasswordField;
-
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-
-import javax.swing.JOptionPane;
-
+import java.awt.event.ActionListener;
 import java.util.Arrays;
+import java.util.Random;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.EtchedBorder;
 
 import com.projetolpoo.business.UserController;
 import com.projetolpoo.exception.BusinessException;
 import com.projetolpoo.exception.SystemException;
+import java.awt.EventQueue;
+
 
 public class RegisterInterface extends JFrame {
 
@@ -39,6 +38,14 @@ public class RegisterInterface extends JFrame {
     private JTextField emailRegisterField;
     private JPasswordField senhaRegisterField;
     private JPasswordField confirmacaoSenhaRegisterField;
+    private JTextField confirmacaoEmailRegisterField;
+    private JDialog verificationDialog;
+    private JTextField verificationCodeField;
+    private String generatedVerificationCode;
+    private String tempNome;
+    private String tempEmail;
+    private String tempSenha;
+    private String tempConfirmacaoSenha;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
@@ -98,55 +105,79 @@ public class RegisterInterface extends JFrame {
         registerPanel.add(emailRegisterField);
         emailRegisterField.setColumns(10);
         
+        JLabel confirmacaoEmailLabel = new JLabel("Confirmar E-mail");
+        confirmacaoEmailLabel.setBounds(110, 260, 120, 14);
+        confirmacaoEmailLabel.setForeground(Color.BLACK);
+        registerPanel.add(confirmacaoEmailLabel);
+        
+        confirmacaoEmailRegisterField = new JTextField();
+        confirmacaoEmailRegisterField.setBounds(110, 280, 200, 30);
+        registerPanel.add(confirmacaoEmailRegisterField);
+        confirmacaoEmailRegisterField.setColumns(10);
+        
         JLabel senhaLabel = new JLabel("Senha");
-        senhaLabel.setBounds(110, 260, 80, 14);
+        senhaLabel.setBounds(110, 320, 80, 14);
         senhaLabel.setForeground(Color.BLACK);
         registerPanel.add(senhaLabel);
         
         senhaRegisterField = new JPasswordField();
-        senhaRegisterField.setBounds(110, 280, 200, 30);
+        senhaRegisterField.setBounds(110, 340, 200, 30);
         registerPanel.add(senhaRegisterField);
         
         JLabel confirmarSenhaLabel = new JLabel("Confirmar Senha");
-        confirmarSenhaLabel.setBounds(110, 320, 120, 14);
+        confirmarSenhaLabel.setBounds(110, 380, 120, 14);
         confirmarSenhaLabel.setForeground(Color.BLACK);
         registerPanel.add(confirmarSenhaLabel);
         
         confirmacaoSenhaRegisterField = new JPasswordField();
-        confirmacaoSenhaRegisterField.setBounds(110, 340, 200, 30);
+        confirmacaoSenhaRegisterField.setBounds(110, 400, 200, 30);
         registerPanel.add(confirmacaoSenhaRegisterField);
         
         JButton cadastrarBtn = new JButton("CADASTRAR");
         cadastrarBtn.addActionListener(new ActionListener() {
+        	
             public void actionPerformed(ActionEvent e) {
-                String nome = nomeRegisterField.getText();
-                String email = emailRegisterField.getText();
+                tempNome = nomeRegisterField.getText();
+                tempEmail = emailRegisterField.getText();
+                String confirmacaoEmail = confirmacaoEmailRegisterField.getText();
                 char[] senhaChars = senhaRegisterField.getPassword();
                 char[] confirmacaoChars = confirmacaoSenhaRegisterField.getPassword();
-                String senha = new String(senhaChars);
-                String confirmacaoSenha = new String(confirmacaoChars);
-
-                try {
-                    UserController controller = new UserController();
-                    controller.registraUsuario(nome, email, senha, confirmacaoSenha);
-                    JOptionPane.showMessageDialog(RegisterInterface.this, "Cadastro realizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-                    
-                    LoginInterface loginFrame = new LoginInterface();
-                    loginFrame.setVisible(true);
-                    dispose();
-                } catch (BusinessException be) {
-                    JOptionPane.showMessageDialog(RegisterInterface.this, be.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-                } catch (SystemException se) {
-                    JOptionPane.showMessageDialog(RegisterInterface.this, se.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-                } finally {
-                    Arrays.fill(senhaChars, ' ');
-                    Arrays.fill(confirmacaoChars, ' ');
+                tempSenha = new String(senhaChars);
+                tempConfirmacaoSenha = new String(confirmacaoChars);
+                if (tempNome.isEmpty() || tempEmail.isEmpty() || confirmacaoEmail.isEmpty() || 
+                    tempSenha.isEmpty() || tempConfirmacaoSenha.isEmpty()) {
+                    JOptionPane.showMessageDialog(RegisterInterface.this, 
+                        "Por favor, preencha todos os campos!", "Erro", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
+
+                if (!tempEmail.equals(confirmacaoEmail)) {
+                    JOptionPane.showMessageDialog(RegisterInterface.this, 
+                        "Os emails não coincidem!", "Erro", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (!tempSenha.equals(tempConfirmacaoSenha)) {
+                    JOptionPane.showMessageDialog(RegisterInterface.this, 
+                        "As senhas não coincidem!", "Erro", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                generatedVerificationCode = generateVerificationCode();
+                if (sendVerificationEmail(tempEmail, generatedVerificationCode)) {
+                    showVerificationDialog();
+                } else {
+                    JOptionPane.showMessageDialog(RegisterInterface.this, 
+                        "Falha ao enviar código de verificação.", "Erro", JOptionPane.ERROR_MESSAGE);
+                }
+                
+                Arrays.fill(senhaChars, ' ');
+                Arrays.fill(confirmacaoChars, ' ');
             }
         });
         cadastrarBtn.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
         cadastrarBtn.setMargin(new Insets(2, 2, 2, 2));
-        cadastrarBtn.setBounds(140, 400, 140, 35);
+        cadastrarBtn.setBounds(140, 460, 140, 35);
         cadastrarBtn.setBackground(new Color(70, 70, 70));
         cadastrarBtn.setForeground(Color.WHITE);
         registerPanel.add(cadastrarBtn);
@@ -164,7 +195,93 @@ public class RegisterInterface extends JFrame {
         voltarBtn.setForeground(Color.BLACK);
         voltarBtn.setContentAreaFilled(false);
         voltarBtn.setBorderPainted(false);
-        voltarBtn.setBounds(160, 450, 100, 24);
+        voltarBtn.setBounds(160, 510, 100, 24);
         registerPanel.add(voltarBtn);
     }
+
+    private String generateVerificationCode() {
+
+        return String.format("%06d", new Random().nextInt(999999));
+    }
+
+    private boolean sendVerificationEmail(String email, String code) {
+        System.out.println("Código de verificação para " + email + ": " + code);
+        return true;
+    }
+
+    private void showVerificationDialog() {
+        verificationDialog = new JDialog(this, "Verificação de Email", true);
+        verificationDialog.setSize(350, 250); 
+        verificationDialog.setLayout(new BorderLayout());
+        verificationDialog.setLocationRelativeTo(this);
+
+        JPanel mainPanel = new JPanel();
+        mainPanel.setBorder(new EmptyBorder(20, 20, 20, 20)); 
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+
+        JLabel instructionLabel = new JLabel("Digite o código enviado para:");
+        instructionLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+        mainPanel.add(instructionLabel);
+
+        JLabel emailLabel = new JLabel(tempEmail);
+        emailLabel.setFont(emailLabel.getFont().deriveFont(Font.BOLD));
+        emailLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+        mainPanel.add(emailLabel);
+
+        mainPanel.add(Box.createVerticalStrut(15));
+
+        verificationCodeField = new JTextField();
+        verificationCodeField.setMaximumSize(new Dimension(200, 30));
+        verificationCodeField.setAlignmentX(JTextField.CENTER_ALIGNMENT);
+        verificationCodeField.setHorizontalAlignment(JTextField.CENTER);
+        mainPanel.add(verificationCodeField);
+
+        mainPanel.add(Box.createVerticalStrut(20));
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 15, 0)); 
+        buttonPanel.setAlignmentX(JPanel.CENTER_ALIGNMENT);
+
+        JButton resendButton = new JButton("Reenviar Código");
+        resendButton.addActionListener(e -> {
+            generatedVerificationCode = generateVerificationCode();
+            if (sendVerificationEmail(tempEmail, generatedVerificationCode)) {
+                JOptionPane.showMessageDialog(verificationDialog, 
+                    "Novo código enviado!", "Info", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+        buttonPanel.add(resendButton);
+
+        JButton verifyButton = new JButton("Verificar");
+        verifyButton.addActionListener(e -> verifyCode());
+        buttonPanel.add(verifyButton);
+
+        mainPanel.add(buttonPanel);
+
+        verificationDialog.add(mainPanel, BorderLayout.CENTER);
+        verificationDialog.setVisible(true);
+    }
+
+    private void verifyCode() {
+        if (verificationCodeField.getText().equals(generatedVerificationCode)) {
+            try {
+                UserController controller = new UserController();
+                controller.registraUsuario(tempNome, tempEmail, tempSenha, tempConfirmacaoSenha);
+                JOptionPane.showMessageDialog(verificationDialog, 
+                    "Cadastro realizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                verificationDialog.dispose();
+                
+                LoginInterface loginFrame = new LoginInterface();
+                loginFrame.setVisible(true);
+                dispose();
+            } catch (BusinessException | SystemException ex) {
+                JOptionPane.showMessageDialog(verificationDialog, 
+                    ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(verificationDialog, 
+                "Código inválido. Tente novamente.", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
 }
