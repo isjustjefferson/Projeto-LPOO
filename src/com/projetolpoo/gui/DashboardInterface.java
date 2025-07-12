@@ -40,12 +40,16 @@ import javax.swing.JSlider;
 import javax.swing.JComboBox;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JTextArea;
+import java.awt.Cursor;
+import javax.swing.border.SoftBevelBorder;
+import javax.swing.border.BevelBorder;
 
 public class DashboardInterface extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JButton btnNewButton_4;
+	private JButton addRecBttn;
 	private JComboBox<Object> comboBoxMetas;
 	private JPanel graficoPanel;
 	private RoundPanel profilePhotoPanel;
@@ -198,8 +202,8 @@ public class DashboardInterface extends JFrame {
 		bemVindoPanel.setLayout(null);
 		
 		JLabel bemVindoLabel = new JLabel("Olá! Bem-vindo ao");
-		bemVindoLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		bemVindoLabel.setBounds(10, 10, 118, 19);
+		bemVindoLabel.setFont(new Font("Dialog", Font.BOLD, 20));
+		bemVindoLabel.setBounds(10, 10, 184, 19);
 		bemVindoPanel.add(bemVindoLabel);
 		
 		JPanel saldoAtualPanel = new JPanel();
@@ -210,64 +214,116 @@ public class DashboardInterface extends JFrame {
 		
 		JLabel saldoAtualLabel = new JLabel("Saldo Atual:");
 		saldoAtualLabel.setForeground(new Color(0, 0, 0));
-		saldoAtualLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		saldoAtualLabel.setFont(new Font("Dialog", Font.BOLD, 20));
 		saldoAtualLabel.setBackground(new Color(0, 0, 0));
-		saldoAtualLabel.setBounds(10, 10, 76, 19);
+		saldoAtualLabel.setBounds(10, 10, 117, 19);
 		saldoAtualPanel.add(saldoAtualLabel);
 		
-		JLabel valorSaldoAtualLabel = new JLabel("R$");
-		valorSaldoAtualLabel.setFont(new Font("Arial", Font.PLAIN, 30));
-		valorSaldoAtualLabel.setBounds(20, 39, 45, 35);
-		saldoAtualPanel.add(valorSaldoAtualLabel);
+		JLabel valorSaldoLabel = new JLabel("");
+		valorSaldoLabel.setFont(new Font("Dialog", Font.BOLD, 25));
+		valorSaldoLabel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		valorSaldoLabel.setBounds(10, 41, 438, 33);
+		saldoAtualPanel.add(valorSaldoLabel);
+		int saldo = 5000;
+		String saldoStr = Integer.toString(saldo);
+		valorSaldoLabel.setText("R$ " + saldoStr);
 		
-		JPanel panel_4 = new JPanel();
-		panel_4.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel_4.setBounds(120, 120, 936, 553);
-		contentPane.add(panel_4);
-		panel_4.setLayout(null);
+		JPanel mainPanel = new JPanel();
+		mainPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
+		mainPanel.setBounds(120, 120, 936, 553);
+		contentPane.add(mainPanel);
+		mainPanel.setLayout(null);
 		
 		graficoPanel = new JPanel();
 		graficoPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		graficoPanel.setBackground(new Color(217, 217, 217));
 		graficoPanel.setBounds(10, 10, 916, 250);
-		panel_4.add(graficoPanel);
+		mainPanel.add(graficoPanel);
 		graficoPanel.setLayout(null);
 		
 		JPanel receitasPanel = new JPanel();
 		receitasPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		receitasPanel.setBackground(new Color(217, 217, 217));
 		receitasPanel.setBounds(10, 270, 444, 273);
-		panel_4.add(receitasPanel);
+		mainPanel.add(receitasPanel);
 		receitasPanel.setLayout(null);
 		
-		JLabel receitasLabel = new JLabel("Receitas:");
-		receitasLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		receitasLabel.setBounds(10, 10, 68, 29);
+		JLabel receitasLabel = new JLabel("RECEITAS");
+		receitasLabel.setFont(new Font("Dialog", Font.BOLD, 25));
+		receitasLabel.setBounds(142, 12, 127, 29);
 		receitasPanel.add(receitasLabel);
 		
-		btnNewButton_4 = new JButton("+");
-		btnNewButton_4.setMargin(new Insets(2, 2, 2, 2));
-		btnNewButton_4.setPreferredSize(new Dimension(1, 1));
-		btnNewButton_4.setBounds(407, 242, 27, 21);
-		receitasPanel.add(btnNewButton_4);
+		addRecBttn = new JButton("+");
+		addRecBttn.setMargin(new Insets(2, 2, 2, 2));
+		addRecBttn.setPreferredSize(new Dimension(1, 1));
+		addRecBttn.setBounds(407, 242, 27, 21);
+		receitasPanel.add(addRecBttn);
+		
+		JLabel recFixasLabel = new JLabel("Fixas:");
+		recFixasLabel.setFont(new Font("Dialog", Font.BOLD, 25));
+		recFixasLabel.setBounds(10, 59, 80, 29);
+		receitasPanel.add(recFixasLabel);
+		
+		JLabel valorRecFixasLabel = new JLabel("A PORRA DO VALOR AQUI");
+		valorRecFixasLabel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		valorRecFixasLabel.setFont(new Font("Dialog", Font.BOLD, 25));
+		valorRecFixasLabel.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+		valorRecFixasLabel.setBounds(50, 94, 334, 44);
+		receitasPanel.add(valorRecFixasLabel);
+		
+		JLabel recVarLabel = new JLabel("Variáveis:");
+		recVarLabel.setFont(new Font("Dialog", Font.BOLD, 25));
+		recVarLabel.setBounds(10, 150, 119, 29);
+		receitasPanel.add(recVarLabel);
+		
+		JLabel valorRecVarLabel = new JLabel("A PORRA DO VALOR AQUI");
+		valorRecVarLabel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		valorRecVarLabel.setFont(new Font("Dialog", Font.BOLD, 25));
+		valorRecVarLabel.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+		valorRecVarLabel.setBounds(50, 186, 334, 44);
+		receitasPanel.add(valorRecVarLabel);
 		
 		JPanel despesasPanel = new JPanel();
 		despesasPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		despesasPanel.setBackground(new Color(217, 217, 217));
 		despesasPanel.setBounds(482, 270, 444, 273);
-		panel_4.add(despesasPanel);
+		mainPanel.add(despesasPanel);
 		despesasPanel.setLayout(null);
 		
-		JLabel despesasLabel = new JLabel("Despesas:");
-		despesasLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		despesasLabel.setBounds(10, 10, 68, 29);
+		JLabel despesasLabel = new JLabel("DESPESAS");
+		despesasLabel.setFont(new Font("Dialog", Font.BOLD, 25));
+		despesasLabel.setBounds(153, 12, 143, 29);
 		despesasPanel.add(despesasLabel);
 		
-		JButton btnNewButton_4_1 = new JButton("+");
-		btnNewButton_4_1.setPreferredSize(new Dimension(1, 1));
-		btnNewButton_4_1.setMargin(new Insets(2, 2, 2, 2));
-		btnNewButton_4_1.setBounds(407, 242, 27, 21);
-		despesasPanel.add(btnNewButton_4_1);
+		JButton addDespBttn = new JButton("+");
+		addDespBttn.setPreferredSize(new Dimension(1, 1));
+		addDespBttn.setMargin(new Insets(2, 2, 2, 2));
+		addDespBttn.setBounds(407, 242, 27, 21);
+		despesasPanel.add(addDespBttn);
+		
+		JLabel despFixasLabel = new JLabel("Fixas:");
+		despFixasLabel.setFont(new Font("Dialog", Font.BOLD, 25));
+		despFixasLabel.setBounds(12, 59, 80, 29);
+		despesasPanel.add(despFixasLabel);
+		
+		JLabel valorDespFixasLabel = new JLabel("A PORRA DO VALOR AQUI");
+		valorDespFixasLabel.setFont(new Font("Dialog", Font.BOLD, 25));
+		valorDespFixasLabel.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+		valorDespFixasLabel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		valorDespFixasLabel.setBounds(50, 94, 334, 44);
+		despesasPanel.add(valorDespFixasLabel);
+		
+		JLabel despVarLabel = new JLabel("Variáveis:");
+		despVarLabel.setFont(new Font("Dialog", Font.BOLD, 25));
+		despVarLabel.setBounds(12, 150, 119, 29);
+		despesasPanel.add(despVarLabel);
+		
+		JLabel valorDespVarLabel = new JLabel("A PORRA DO VALOR AQUI");
+		valorDespVarLabel.setFont(new Font("Dialog", Font.BOLD, 25));
+		valorDespVarLabel.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+		valorDespVarLabel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		valorDespVarLabel.setBounds(50, 186, 334, 44);
+		despesasPanel.add(valorDespVarLabel);
 		
 		 atualizarMetasComboBox();
 		 desenharGrafico(null);
@@ -277,7 +333,7 @@ public class DashboardInterface extends JFrame {
 	private void atualizarMetasComboBox() {
 
        //DADOS DE TESTE! CASO QUEIRAM USAR PARA APRESENTAR PARA CARTAXO, TIREM O COMENTARIO. 
-		/*Account contaDeTeste = new Account();
+		Account contaDeTeste = new Account();
         contaDeTeste.adicionarMeta(new Meta("Viagem", 2500.00));
         contaDeTeste.adicionarMeta(new Meta("Notebook", 3000.00));
         contaDeTeste.adicionarMeta(new Meta("Curso", 2000.00));
@@ -289,31 +345,31 @@ public class DashboardInterface extends JFrame {
             comboBoxMetas.addItem(meta);
         
         }
-    */
+    
 	
     }
 	private void desenharGrafico(Meta metaSelecionada) {
 	    //DADOS DE TESTE! CASO QUEIRAM APRESENTAR PRA CARTAXO, RETIREM O COMENTARIO. 
-	    /*Account contaDeTeste = new Account();
+	    Account contaDeTeste = new Account();
 	    // Receitas
 	    contaDeTeste.adicionarTransacao(new Transacao("Salário", 3500.00, LocalDate.of(2025, 7, 5)));
 	    contaDeTeste.adicionarTransacao(new Transacao("Freelance", 800.00, LocalDate.of(2025, 7, 12)));
 	    // Despesas
 	    contaDeTeste.adicionarTransacao(new Transacao("Aluguel", -1200.00, LocalDate.of(2025, 7, 6)));
 	    contaDeTeste.adicionarTransacao(new Transacao("Internet", -150.00, LocalDate.of(2025, 7, 10)));
-	    contaDeTeste.adicionarTransacao(new Transacao("Supermercado", -600.00, LocalDate.of(2025, 7, 11)));*/
+	    contaDeTeste.adicionarTransacao(new Transacao("Supermercado", -600.00, LocalDate.of(2025, 7, 11)));
 	    //FINAL DADOS DE TESTE!
 	    
 	    TimeSeries series = new TimeSeries("Evolução do Saldo");
 	    double saldoCumulativo = 0.0;
 	    
 	    //TESTE! CASO QUEIRAM APRESENTAR PRA CARTAXO, RETIREM O COMENTARIO. 
-	    /*contaDeTeste.getTransacoes().sort((t1, t2) -> t1.getData().compareTo(t2.getData()));
+	    contaDeTeste.getTransacoes().sort((t1, t2) -> t1.getData().compareTo(t2.getData()));
 	    
 	    for (Transacao t : contaDeTeste.getTransacoes()) {
 	        saldoCumulativo += t.getValor();
 	        series.add(new Day(t.getData().getDayOfMonth(), t.getData().getMonthValue(), t.getData().getYear()), saldoCumulativo);
-	    }*/
+	    }
 	    //TESTE!
 	    
 	    TimeSeriesCollection dataset = new TimeSeriesCollection();
