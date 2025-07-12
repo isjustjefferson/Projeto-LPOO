@@ -40,7 +40,18 @@
     <artifactId>jcommon</artifactId>
     <version>1.0.24</version>
 </dependency>
-    
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot</artifactId>
+            <version>3.2.4</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-spring-web-api</artifactId>
+            <version>6.1.SP1</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
   
 </project>

@@ -1,5 +1,9 @@
 package com.projetolpoo.gui;
 
+import com.projetolpoo.business.RecuperacaoSenhaController;
+import com.projetolpoo.database.Repository;
+import com.projetolpoo.database.UserRepository;
+import com.projetolpoo.service.EmailService;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
@@ -14,7 +18,7 @@ import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
-import java.util.Random;
+/*import java.util.Random;*/
 
 public class EsqueceuSenhaEmail extends JFrame {
     private static final long serialVersionUID = 1L;
@@ -87,6 +91,16 @@ public class EsqueceuSenhaEmail extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String usuario = usuarioField.getText().trim();
                 String email = emailField.getText().trim();
+                Repository repository = new UserRepository();
+                boolean existe = repository.confirm(email);
+                
+                if(!existe){
+                   JOptionPane.showMessageDialog(EsqueceuSenhaEmail.this, 
+                            "Email não registrado", 
+                            "Atenção", 
+                            JOptionPane.WARNING_MESSAGE);
+                    return; 
+                }
                 
                 if (usuario.isEmpty() || email.isEmpty() || !email.contains("@")) {
                     JOptionPane.showMessageDialog(EsqueceuSenhaEmail.this, 
@@ -95,7 +109,15 @@ public class EsqueceuSenhaEmail extends JFrame {
                             JOptionPane.WARNING_MESSAGE);
                     return;
                 }
-                String codigoAutenticacao = gerarCodigoAutenticacao();
+                
+                /*String codigoAutenticacao = gerarCodigoAutenticacao();*/
+                
+                RecuperacaoSenhaController controlador = new RecuperacaoSenhaController();
+                controlador.setCodigoAutenticacao(controlador.gerarCodigo());
+                controlador.setEmail(email);
+                EmailService emailService = new EmailService();
+                emailService.enviarEmail(controlador.getEmail(), "Recuperação de Senha", "Seu código de autenticação é: " + controlador.getCodigoAutenticacao() + "/nVálido por 5 minutos.");
+                
                 String codigoInserido = JOptionPane.showInputDialog(
                     EsqueceuSenhaEmail.this,
                     "Enviamos um código para " + email + "\nDigite o código recebido:",
@@ -103,7 +125,7 @@ public class EsqueceuSenhaEmail extends JFrame {
                     JOptionPane.PLAIN_MESSAGE
                 );
                 
-                if (codigoInserido != null && codigoInserido.equals(codigoAutenticacao)) {
+                if (codigoInserido != null && codigoInserido.equals(controlador.getCodigoAutenticacao())) {
                     
                     mostrarDialogoNovaSenha();
                 } else {
@@ -132,11 +154,11 @@ public class EsqueceuSenhaEmail extends JFrame {
         mainPanel.add(voltarBtn);
     }
     
-    private String gerarCodigoAutenticacao() {
+    /*private String gerarCodigoAutenticacao() {
         Random random = new Random();
         int codigo = 100000 + random.nextInt(999999);
         return String.valueOf(codigo);
-    }
+    }*/
     
     private void mostrarDialogoNovaSenha() {
         JPanel panel = new JPanel(new GridLayout(3, 1, 10, 10));

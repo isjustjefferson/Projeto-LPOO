@@ -1,5 +1,6 @@
 package com.projetolpoo.service;
 
+import com.projetolpoo.exception.EmailException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -13,9 +14,10 @@ public class EmailService {
     
     @Value("${spring.mail.username}")
     private String remetente;
+    
+    
 
     public String enviarEmail(String destinatario, String assunto, String mensagem){
-
         try {
             SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
             simpleMailMessage.setFrom(remetente);
@@ -24,8 +26,9 @@ public class EmailService {
             simpleMailMessage.setText(mensagem);
             javaMailSender.send(simpleMailMessage);
             return "Email enviado";
-        } catch (Exception e) {
-            return "Erro ao tentar enviar email" + e.getLocalizedMessage();
+        } catch (EmailException ee) {
+            throw new EmailException("Erro ao enviar mensagem.");
         }
     }
 }
+

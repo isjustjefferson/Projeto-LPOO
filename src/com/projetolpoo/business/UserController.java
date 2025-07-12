@@ -35,9 +35,9 @@ public class UserController {
    
         User user = new User (nome, email, senha);
         Repository repository = new UserRepository();
-        boolean exists = repository.confirm(email);
+        boolean existe = repository.confirm(email);
         
-        if (exists){
+        if (existe){
             throw new BusinessException ("Já existe um usuário com esse email.");
         }
         

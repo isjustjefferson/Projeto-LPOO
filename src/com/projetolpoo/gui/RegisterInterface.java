@@ -1,5 +1,6 @@
 package com.projetolpoo.gui;
 
+import com.projetolpoo.business.RecuperacaoSenhaController;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -9,7 +10,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
-import java.util.Random;
+/*import java.util.Random;*/
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -26,9 +27,13 @@ import javax.swing.border.EtchedBorder;
 
 import com.projetolpoo.business.UserController;
 import com.projetolpoo.exception.BusinessException;
+import com.projetolpoo.exception.EmailException;
 import com.projetolpoo.exception.SystemException;
+import com.projetolpoo.service.EmailService;
 import java.awt.EventQueue;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class RegisterInterface extends JFrame {
 
@@ -41,7 +46,7 @@ public class RegisterInterface extends JFrame {
     private JTextField confirmacaoEmailRegisterField;
     private JDialog verificationDialog;
     private JTextField verificationCodeField;
-    private String generatedVerificationCode;
+    /*private String generatedVerificationCode;*/
     private String tempNome;
     private String tempEmail;
     private String tempSenha;
@@ -163,13 +168,14 @@ public class RegisterInterface extends JFrame {
                     return;
                 }
 
-                generatedVerificationCode = generateVerificationCode();
-                if (sendVerificationEmail(tempEmail, generatedVerificationCode)) {
+                enviaEmailVerificacao(geraCodigo());
+                
+                /*if (sendVerificationEmail(tempEmail, controlador.getCodigoAutenticacao())) {
                     showVerificationDialog();
                 } else {
                     JOptionPane.showMessageDialog(RegisterInterface.this, 
                         "Falha ao enviar código de verificação.", "Erro", JOptionPane.ERROR_MESSAGE);
-                }
+                }*/
                 
                 Arrays.fill(senhaChars, ' ');
                 Arrays.fill(confirmacaoChars, ' ');
@@ -199,16 +205,30 @@ public class RegisterInterface extends JFrame {
         registerPanel.add(voltarBtn);
     }
 
-    private String generateVerificationCode() {
+    /*private String generateVerificationCode() {
 
         return String.format("%06d", new Random().nextInt(999999));
-    }
+    }*/
 
-    private boolean sendVerificationEmail(String email, String code) {
+    /*private boolean sendVerificationEmail(String email, String code) {
         System.out.println("Código de verificação para " + email + ": " + code);
         return true;
-    }
+    }*/
 
+    private RecuperacaoSenhaController geraCodigo(){
+        RecuperacaoSenhaController controlador = new RecuperacaoSenhaController();
+        controlador.setCodigoAutenticacao(controlador.gerarCodigo());
+        controlador.setEmail(tempEmail);
+        return controlador;
+    }
+    
+    private void enviaEmailVerificacao(RecuperacaoSenhaController controlador){
+        ApplicationContext context = new AnnotationConfigApplicationContext(EmailService.class);
+        EmailService emailService = context.getBean(EmailService.class);
+        String resultado = emailService.enviarEmail(controlador.getEmail(), "Verificação de Email", "Seu código de autenticação: " + controlador.getCodigoAutenticacao());
+        System.out.println(resultado);
+    }
+    
     private void showVerificationDialog() {
         verificationDialog = new JDialog(this, "Verificação de Email", true);
         verificationDialog.setSize(350, 250); 
@@ -244,11 +264,14 @@ public class RegisterInterface extends JFrame {
 
         JButton resendButton = new JButton("Reenviar Código");
         resendButton.addActionListener(e -> {
-            generatedVerificationCode = generateVerificationCode();
-            if (sendVerificationEmail(tempEmail, generatedVerificationCode)) {
+            enviaEmailVerificacao(geraCodigo());
+            JOptionPane.showMessageDialog(verificationDialog, 
+                "Novo código enviado!", "Info", JOptionPane.INFORMATION_MESSAGE);
+                
+            /*if (sendVerificationEmail(tempEmail, controlador.getCodigoAutenticacao())) {
                 JOptionPane.showMessageDialog(verificationDialog, 
                     "Novo código enviado!", "Info", JOptionPane.INFORMATION_MESSAGE);
-            }
+            }*/
         });
         buttonPanel.add(resendButton);
 
@@ -263,7 +286,9 @@ public class RegisterInterface extends JFrame {
     }
 
     private void verifyCode() {
-        if (verificationCodeField.getText().equals(generatedVerificationCode)) {
+        RecuperacaoSenhaController controlador = new RecuperacaoSenhaController();
+        
+        if (verificationCodeField.getText().equals(controlador.getCodigoAutenticacao())) {
             try {
                 UserController controller = new UserController();
                 controller.registraUsuario(tempNome, tempEmail, tempSenha, tempConfirmacaoSenha);
@@ -274,7 +299,7 @@ public class RegisterInterface extends JFrame {
                 LoginInterface loginFrame = new LoginInterface();
                 loginFrame.setVisible(true);
                 dispose();
-            } catch (BusinessException | SystemException ex) {
+            } catch (BusinessException | SystemException | EmailException ex ) {
                 JOptionPane.showMessageDialog(verificationDialog, 
                     ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
             }
