@@ -1,6 +1,10 @@
 package com.projetolpoo.gui;
 
 import java.awt.EventQueue;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import java.awt.Image;
 import org.jfree.chart.ui.RectangleAnchor;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -44,6 +48,7 @@ public class DashboardInterface extends JFrame {
 	private JButton btnNewButton_4;
 	private JComboBox<Object> comboBoxMetas;
 	private JPanel graficoPanel;
+	private RoundPanel profilePhotoPanel;
 
 	/**
 	 * Launch the application.
@@ -81,11 +86,52 @@ public class DashboardInterface extends JFrame {
 		contentPane.add(profileDashboard);
 		profileDashboard.setLayout(null);
 		
-		JButton redondoBtn = new JButton("Trocar Foto");
-		redondoBtn.setMargin(new Insets(2, 2, 2, 2));
-		redondoBtn.setBounds(new Rectangle(12, 12, 0, 0));
-		redondoBtn.setBounds(7, 41, 85, 21);
-		profileDashboard.add(redondoBtn);
+				JButton escolherFotoBtn = new JButton("");
+				escolherFotoBtn.setForeground(new Color(255, 255, 255));
+				escolherFotoBtn.setBounds(10, 29, 80, 49);
+				escolherFotoBtn.setContentAreaFilled(false); 
+				escolherFotoBtn.setBorderPainted(false);     
+				escolherFotoBtn.setFocusPainted(false);      
+				profileDashboard.add(escolherFotoBtn);
+				escolherFotoBtn.setFont(new Font("Tahoma", Font.PLAIN, 11));
+				profilePhotoPanel = new RoundPanel();
+				profilePhotoPanel.setBackground(new Color(0, 0, 0));
+				profilePhotoPanel.setBounds(5, 5, 90, 90);
+				profileDashboard.add(profilePhotoPanel);
+				profilePhotoPanel.setCornerRadius(100);
+				try {
+				    ImageIcon icon = new ImageIcon("src/imagens/foto_padrao.png"); 
+				    Image img = icon.getImage().getScaledInstance(
+				        profilePhotoPanel.getWidth(), profilePhotoPanel.getHeight(), Image.SCALE_SMOOTH);
+				    profilePhotoPanel.setImage(img);
+				} catch (Exception e) {
+				    System.out.println("Erro ao carregar imagem padrão: " + e.getMessage());
+				}
+				
+				escolherFotoBtn.addActionListener(e -> {
+				    JFileChooser fileChooser = new JFileChooser();
+				    fileChooser.setDialogTitle("Selecionar imagem de perfil");
+				    fileChooser.setAcceptAllFileFilterUsed(false);
+				    fileChooser.addChoosableFileFilter(
+				        new javax.swing.filechooser.FileNameExtensionFilter("Imagens", "jpg", "jpeg", "png"));
+
+				    int result = fileChooser.showOpenDialog(this);
+				    if (result == JFileChooser.APPROVE_OPTION) {
+				        try {
+				            ImageIcon icon = new ImageIcon(fileChooser.getSelectedFile().getAbsolutePath());
+				            				            
+				            Image img = icon.getImage().getScaledInstance(
+				                profilePhotoPanel.getWidth(), profilePhotoPanel.getHeight(), Image.SCALE_SMOOTH);
+				            				           
+				            profilePhotoPanel.setImage(img);
+				            				            
+				            profilePhotoPanel.repaint();
+
+				        } catch (Exception ex) {
+				            JOptionPane.showMessageDialog(this, "Erro ao carregar imagem: " + ex.getMessage());
+				        }
+				    }
+				});
 		
 		JPanel functionsDashboard = new JPanel();
 		functionsDashboard.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -155,10 +201,6 @@ public class DashboardInterface extends JFrame {
 		bemVindoLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		bemVindoLabel.setBounds(10, 10, 118, 19);
 		bemVindoPanel.add(bemVindoLabel);
-		
-		JLabel lblNewLabel_1 = new JLabel("Lorem ipsum dolor allahuh akbhar \r\nfire in the hole expeliarmus pokemon \r\nkaioken expectum patronum cruciatus \r\nred xvii ink pink blinky chapolim.");
-		lblNewLabel_1.setBounds(10, 35, 307, 55);
-		bemVindoPanel.add(lblNewLabel_1);
 		
 		JPanel saldoAtualPanel = new JPanel();
 		saldoAtualPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -248,7 +290,7 @@ public class DashboardInterface extends JFrame {
         
         }
     */
-		comboBoxMetas.addItem("Metas");
+	
     }
 	private void desenharGrafico(Meta metaSelecionada) {
 	    //DADOS DE TESTE! CASO QUEIRAM APRESENTAR PRA CARTAXO, RETIREM O COMENTARIO. 
@@ -288,7 +330,6 @@ public class DashboardInterface extends JFrame {
 	            false
 	    );
 
-	    
 	    XYPlot plot = chart.getXYPlot(); 
 	    plot.clearDomainMarkers(); 
 	    
@@ -300,7 +341,6 @@ public class DashboardInterface extends JFrame {
 	        plot.addRangeMarker(marker); 
 	        marker.setLabelAnchor(RectangleAnchor.CENTER);
 	    }
-	    
 	    
 	    ChartPanel chartPanel = new ChartPanel(chart);    
 	    
