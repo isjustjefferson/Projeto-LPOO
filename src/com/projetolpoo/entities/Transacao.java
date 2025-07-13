@@ -7,9 +7,9 @@ public class Transacao implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String descricao;
-    private double valor;
-    private LocalDate data;
+    private String descricao; //Descreve o que é a transação. Ex: "Salário", "Aluguel"....
+    private double valor; // é o valor, Se for positivo será Receita, se for nagativo será DESPESA. 
+    private LocalDate data; // Guarda a Data de entrada do valor.
 
     public Transacao() {
     }

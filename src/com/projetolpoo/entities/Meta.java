@@ -6,13 +6,13 @@ public class Meta implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String nome;
-    private double valorAlvo;
+    private String nome; // Vai guardar o nome da meta
+    private int valorAlvo; // Vai guardar o valor da meta
 
-    public Meta() {
+    public Meta() { // Aí é o construtor de uma "Meta". 
     }
 
-    public Meta(String nome, double valorAlvo) {
+    public Meta(String nome, int valorAlvo) {
         this.nome = nome;
         this.valorAlvo = valorAlvo;
     }
@@ -25,11 +25,11 @@ public class Meta implements Serializable {
         this.nome = nome;
     }
 
-    public double getValorAlvo() {
+    public int getValorAlvo() {
         return valorAlvo;
     }
 
-    public void setValorAlvo(double valorAlvo) {
+    public void setValorAlvo(int valorAlvo) {
         this.valorAlvo = valorAlvo;
     }
     @Override

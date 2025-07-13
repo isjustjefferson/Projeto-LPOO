@@ -21,6 +21,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 import java.awt.Font;
+import java.awt.GridLayout;
+
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import java.awt.Dimension;
@@ -53,6 +55,7 @@ public class DashboardInterface extends JFrame {
 	private JComboBox<Object> comboBoxMetas;
 	private JPanel graficoPanel;
 	private RoundPanel profilePhotoPanel;
+	private Account contaDoUsuario;
 
 	/**
 	 * Launch the application.
@@ -74,6 +77,7 @@ public class DashboardInterface extends JFrame {
 	 * Create the frame.
 	 */
 	public DashboardInterface() {
+		this.contaDoUsuario = new Account();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1080, 720);
 		setLocationRelativeTo(null);
@@ -148,35 +152,82 @@ public class DashboardInterface extends JFrame {
 		relatorioBtn.setBounds(7, 279, 85, 21);
 		functionsDashboard.add(relatorioBtn);
 		relatorioBtn.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		
-		JButton removerBtn = new JButton("Remover");
-		removerBtn.setBounds(7, 248, 85, 21);
-		functionsDashboard.add(removerBtn);
-		removerBtn.setMargin(new Insets(2, 2, 2, 2));
-		removerBtn.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		
-		JButton adicionarBtn = new JButton("Adicionar");
-		adicionarBtn.setBounds(7, 217, 85, 21);
-		functionsDashboard.add(adicionarBtn);
-		adicionarBtn.setMargin(new Insets(2, 2, 2, 2));
-		adicionarBtn.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		
+				
 		comboBoxMetas = new JComboBox<>();
 		comboBoxMetas.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
+		    public void actionPerformed(ActionEvent e) {		        
 		        Object itemSelecionado = comboBoxMetas.getSelectedItem();
-
 		        if (itemSelecionado instanceof Meta) {
-		            
-		            desenharGrafico((Meta) itemSelecionado);
-		        } else {
-		         
+		            desenharGrafico((Meta) itemSelecionado); 
+		        } else {		         
 		            desenharGrafico(null);
 		        }
 		    }
 		});
 		comboBoxMetas.setBounds(10, 10, 82, 21);
 		functionsDashboard.add(comboBoxMetas);
+		
+		JButton adicionarBtn = new JButton("Adicionar");
+		adicionarBtn.setBounds(7, 217, 85, 21);
+		functionsDashboard.add(adicionarBtn);
+		adicionarBtn.setMargin(new Insets(2, 2, 2, 2));
+		adicionarBtn.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		adicionarBtn.addActionListener(e -> {
+		    if (contaDoUsuario.getMetas().size() >= 5) {
+		        JOptionPane.showMessageDialog(this, "Você atingiu o limite máximo de 5 metas.", "Limite Atingido", JOptionPane.WARNING_MESSAGE);
+		        return;
+		    }
+		    AdicionarMetaDialog dialog = new AdicionarMetaDialog(this);
+		    dialog.setVisible(true);
+		    Meta metaCriada = dialog.getNovaMeta();
+		    if (metaCriada != null) {
+		        contaDoUsuario.adicionarMeta(metaCriada);
+		        atualizarMetasComboBox(); 
+		        comboBoxMetas.setSelectedItem(metaCriada);
+		        JOptionPane.showMessageDialog(this, "Meta '" + metaCriada.getNome() + "' adicionada com sucesso!");
+		    }
+		});
+		
+		JButton removerBtn = new JButton("Remover");
+		removerBtn.setBounds(7, 248, 85, 21);
+		functionsDashboard.add(removerBtn);
+		removerBtn.setMargin(new Insets(2, 2, 2, 2));
+		removerBtn.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		removerBtn.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        Object itemSelecionado = comboBoxMetas.getSelectedItem();
+		        if (!(itemSelecionado instanceof Meta)) {
+		            JOptionPane.showMessageDialog(
+		                DashboardInterface.this, 
+		                "Por favor, selecione uma meta válida para remover.", 
+		                "Nenhuma Meta Selecionada", 
+		                JOptionPane.INFORMATION_MESSAGE
+		            );
+		            return; 
+		        }
+
+		        Meta metaParaRemover = (Meta) itemSelecionado;
+		        Object[] options = { "Sim, remover", "Não" };
+		        int resposta = JOptionPane.showOptionDialog(
+		            DashboardInterface.this, 
+		            "Você tem certeza que deseja remover a meta '" + metaParaRemover.getNome() + "'?",
+		            "Confirmar Remoção",
+		            JOptionPane.YES_NO_OPTION,
+		            JOptionPane.QUESTION_MESSAGE,
+		            null,
+		            options,
+		            options[1]
+		        );
+
+		        if (resposta == 0) { 
+		            contaDoUsuario.getMetas().remove(metaParaRemover);
+		            atualizarMetasComboBox();
+		            desenharGrafico(null);
+		            JOptionPane.showMessageDialog(DashboardInterface.this, "Meta removida com sucesso!");
+		        }
+		    }
+		}); 
+		
 		
 		JPanel functionsDashboardPanel = new JPanel();
 		functionsDashboardPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -331,80 +382,43 @@ public class DashboardInterface extends JFrame {
 	}
 
 	private void atualizarMetasComboBox() {
-
-       //DADOS DE TESTE! CASO QUEIRAM USAR PARA APRESENTAR PARA CARTAXO, TIREM O COMENTARIO. 
-		Account contaDeTeste = new Account();
-        contaDeTeste.adicionarMeta(new Meta("Viagem", 2500.00));
-        contaDeTeste.adicionarMeta(new Meta("Notebook", 3000.00));
-        contaDeTeste.adicionarMeta(new Meta("Curso", 2000.00));
-		
         comboBoxMetas.removeAllItems();
         comboBoxMetas.addItem("Metas");
-        List<Meta> metas = contaDeTeste.getMetas();
-        for (Meta meta : metas) {
+        for (Meta meta : this.contaDoUsuario.getMetas()) {
             comboBoxMetas.addItem(meta);
-        
         }
-    
-	
     }
+	
 	private void desenharGrafico(Meta metaSelecionada) {
-	    //DADOS DE TESTE! CASO QUEIRAM APRESENTAR PRA CARTAXO, RETIREM O COMENTARIO. 
-	    Account contaDeTeste = new Account();
-	    // Receitas
-	    contaDeTeste.adicionarTransacao(new Transacao("Salário", 3500.00, LocalDate.of(2025, 7, 5)));
-	    contaDeTeste.adicionarTransacao(new Transacao("Freelance", 800.00, LocalDate.of(2025, 7, 12)));
-	    // Despesas
-	    contaDeTeste.adicionarTransacao(new Transacao("Aluguel", -1200.00, LocalDate.of(2025, 7, 6)));
-	    contaDeTeste.adicionarTransacao(new Transacao("Internet", -150.00, LocalDate.of(2025, 7, 10)));
-	    contaDeTeste.adicionarTransacao(new Transacao("Supermercado", -600.00, LocalDate.of(2025, 7, 11)));
-	    //FINAL DADOS DE TESTE!
-	    
+	    graficoPanel.removeAll();
+	    graficoPanel.setLayout(new GridLayout(1, 1));
 	    TimeSeries series = new TimeSeries("Evolução do Saldo");
 	    double saldoCumulativo = 0.0;
 	    
-	    //TESTE! CASO QUEIRAM APRESENTAR PRA CARTAXO, RETIREM O COMENTARIO. 
-	    contaDeTeste.getTransacoes().sort((t1, t2) -> t1.getData().compareTo(t2.getData()));
-	    
-	    for (Transacao t : contaDeTeste.getTransacoes()) {
+	    contaDoUsuario.getTransacoes().sort((t1, t2) -> t1.getData().compareTo(t2.getData()));
+	    for (Transacao t : this.contaDoUsuario.getTransacoes()) {
 	        saldoCumulativo += t.getValor();
 	        series.add(new Day(t.getData().getDayOfMonth(), t.getData().getMonthValue(), t.getData().getYear()), saldoCumulativo);
 	    }
-	    //TESTE!
 	    
 	    TimeSeriesCollection dataset = new TimeSeriesCollection();
 	    dataset.addSeries(series);
 
-	  
-	    JFreeChart chart = ChartFactory.createTimeSeriesChart(
-	            "Evolução", 
-	            "Data",              
-	            "Saldo (R$)",        
-	            dataset,
-	            false,               
-	            false,
-	            false
-	    );
-
-	    XYPlot plot = chart.getXYPlot(); 
-	    plot.clearDomainMarkers(); 
+	    JFreeChart chart = ChartFactory.createTimeSeriesChart("Evolução do Saldo", "Data", "Saldo (R$)", dataset, false, true, false);
+	    XYPlot plot = chart.getXYPlot();
+	    plot.clearRangeMarkers();
 	    
 	    if (metaSelecionada != null) {
-	        
 	        ValueMarker marker = new ValueMarker(metaSelecionada.getValorAlvo());
-	        marker.setPaint(Color.GREEN); 
-	        marker.setLabel(metaSelecionada.getNome()); 
-	        plot.addRangeMarker(marker); 
-	        marker.setLabelAnchor(RectangleAnchor.CENTER);
+	        marker.setPaint(Color.GREEN);
+	        marker.setLabel(String.format("Meta: %s (R$ %d)", metaSelecionada.getNome(), metaSelecionada.getValorAlvo()));
+	        marker.setLabelFont(new Font("SansSerif", Font.BOLD, 12));
+	        plot.addRangeMarker(marker);
 	    }
 	    
-	    ChartPanel chartPanel = new ChartPanel(chart);    
-	    
-	    graficoPanel.removeAll(); 
-	    graficoPanel.setLayout(new BorderLayout()); 
-	    graficoPanel.add(chartPanel, BorderLayout.CENTER); 
-	    
-	    graficoPanel.revalidate(); 
-	    graficoPanel.repaint(); 
+	    ChartPanel chartPanel = new ChartPanel(chart);
+	    graficoPanel.add(chartPanel);
+	    graficoPanel.revalidate();
+	    graficoPanel.repaint();
 	}
 }

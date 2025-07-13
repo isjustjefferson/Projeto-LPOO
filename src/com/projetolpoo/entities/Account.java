@@ -8,19 +8,19 @@ public class Account implements Serializable {
 
     private static final long serialVersionUID = 1L; 
     
-    private double balance; 
+    private int balance; //Salva o saldo.
     
     
-    private List<Meta> metas = new ArrayList<>();
-    private List<Transacao> transacoes = new ArrayList<>();
+    private List<Meta> metas = new ArrayList<>(); //Lista que salva todos os objetos "META", ela sempre vai iniciar como uma lista vazia. 
+    private List<Transacao> transacoes = new ArrayList<>(); //Lista que salva todas as transações (Receitas e Despesas) da conta. 
 
     
-    public Account() {
-        this.balance = 0.0; 
+    public Account() { //Garante que uma Conta sempre comece com o saldo zerado (Calma, Elton!)
+        this.balance = 0; 
     }
 
    
-    public void adicionarTransacao(Transacao transacao) {
+    public void adicionarTransacao(Transacao transacao) { //Adicionar e atualiza o "Balance"
         if (transacao != null) {
             this.transacoes.add(transacao);
             this.balance += transacao.getValor();
@@ -34,11 +34,11 @@ public class Account implements Serializable {
     }
 
 
-    public double getBalance() {
+    public int getBalance() {
         return balance;
     }
 
-    public void setBalance(double balance) {
+    public void setBalance(int balance) {
         this.balance = balance;
     }
 
