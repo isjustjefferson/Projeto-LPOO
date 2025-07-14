@@ -1,6 +1,5 @@
 package com.projetolpoo.gui;
 
-
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
@@ -49,6 +48,7 @@ public class LoginInterface extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1080, 720);
         setLocationRelativeTo(null);
+        setResizable(false);
         
         contentPane = new JPanel();
         contentPane.setBackground(new Color(40, 40, 40));

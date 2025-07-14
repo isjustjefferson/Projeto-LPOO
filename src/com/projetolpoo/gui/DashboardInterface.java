@@ -81,6 +81,8 @@ public class DashboardInterface extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1080, 720);
 		setLocationRelativeTo(null);
+		setResizable(false);
+		
 		contentPane = new JPanel();
 		contentPane.setBounds(new Rectangle(15, 0, 0, 0));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

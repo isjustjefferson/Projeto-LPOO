@@ -50,6 +50,7 @@ public class RecuperacaoSenhaInterface extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1080, 720);
         setLocationRelativeTo(null);
+        setResizable(false);
         
         contentPane = new JPanel();
         contentPane.setBackground(new Color(40, 40, 40));
