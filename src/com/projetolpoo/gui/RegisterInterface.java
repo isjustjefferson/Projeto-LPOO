@@ -45,14 +45,7 @@ public class RegisterInterface extends JFrame {
     private String tempEmail;
     private String tempSenha;
     private String tempConfirmacaoSenha;
-    private static EmailController instance;
     
-    public static EmailController getInstance(){
-        if (instance ==null){
-            instance=new EmailController();
-        }
-        return instance;
-    }
     
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
@@ -156,8 +149,8 @@ public class RegisterInterface extends JFrame {
                     
                     Arrays.fill(senhaChars, ' ');
                     Arrays.fill(confirmacaoChars, ' ');
-            
-                    getInstance().enviaEmailRegistro(tempEmail);
+                    
+                    EmailController.getInstance().enviaEmailRegistro(tempEmail);
                     
                     showVerificationDialog(tempEmail);
                 }catch (BusinessException | EmailException | SystemException ee){
@@ -228,7 +221,7 @@ public class RegisterInterface extends JFrame {
         JButton resendButton = new JButton("Reenviar Código");
         resendButton.addActionListener(e -> {
             try{
-                getInstance().enviaEmailRegistro(tempEmail);        
+                EmailController.getInstance().enviaEmailRegistro(tempEmail);        
             
                 JOptionPane.showMessageDialog(verificationDialog, 
                     "Novo código enviado!", 
@@ -247,7 +240,7 @@ public class RegisterInterface extends JFrame {
         verifyButton.addActionListener(e -> {
             try{
                 String codigoInserido=verificationCodeField.getText().trim();
-                if(getInstance().confirmaCodigo(codigoInserido)){
+                if(EmailController.getInstance().confirmaCodigo(codigoInserido)){
                     UserController userController = new UserController();
                     userController.registraUsuario(tempNome, tempEmail, tempSenha, tempConfirmacaoSenha);
                     JOptionPane.showMessageDialog(verificationDialog, 
