@@ -1,6 +1,6 @@
 package com.projetolpoo;
 
-import com.projetolpoo.business.RecuperacaoSenhaController;
+/*import com.projetolpoo.business.EmailController;
 import com.projetolpoo.exception.EmailException;
 
 public class TestRunner {
@@ -8,7 +8,7 @@ public class TestRunner {
     public static void main(String[] args) {
 
         System.out.println("\n--- Testando RecuperacaoSenhaController ---");
-        RecuperacaoSenhaController controlador = new RecuperacaoSenhaController();
+        EmailController controlador = new RecuperacaoSenhaController();
         String emailDoUsuarioParaRecuperacao = "enderson.s.backup@gmail.com";
 
         try {
@@ -19,4 +19,4 @@ public class TestRunner {
             e.printStackTrace();
         }
     }
-}
+}*/

@@ -1,9 +1,12 @@
 package com.projetolpoo.gui;
 
-import com.projetolpoo.business.RecuperacaoSenhaController;
+import com.projetolpoo.business.EmailController;
+import com.projetolpoo.business.UserController;
 import com.projetolpoo.database.Repository;
 import com.projetolpoo.database.UserRepository;
-import com.projetolpoo.service.EmailService;
+import com.projetolpoo.exception.BusinessException;
+import com.projetolpoo.exception.EmailException;
+import com.projetolpoo.exception.SystemException;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
@@ -18,7 +21,6 @@ import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
-/*import java.util.Random;*/
 
 public class EsqueceuSenhaEmail extends JFrame {
     private static final long serialVersionUID = 1L;
@@ -80,49 +82,27 @@ public class EsqueceuSenhaEmail extends JFrame {
         continuarBtn.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
         continuarBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String email = emailField.getText().trim();
-                Repository repository = new UserRepository();
-                boolean existe = repository.confirm(email);
+
+                try{
+                    String email = emailField.getText().trim();
+                    EmailController emailController = new EmailController();
+                    emailController.enviaEmailRecuperacao(email);
                 
-                if(!existe){
-                   JOptionPane.showMessageDialog(EsqueceuSenhaEmail.this, 
-                            "Email não registrado", 
-                            "Atenção", 
-                            JOptionPane.WARNING_MESSAGE);
-                    return; 
-                }
-                
-                if (email.isEmpty() || !email.contains("@")) {
-                    JOptionPane.showMessageDialog(EsqueceuSenhaEmail.this, 
-                            "Por favor, digite um e-mail válido", 
-                            "Atenção", 
-                            JOptionPane.WARNING_MESSAGE);
-                    return;
-                }
-                
-                /*String codigoAutenticacao = gerarCodigoAutenticacao();*/
-                
-                RecuperacaoSenhaController controlador = new RecuperacaoSenhaController();
-                controlador.setCodigoAutenticacao(controlador.gerarCodigo());
-                controlador.setEmail(email);
-                EmailService emailService = new EmailService();
-                emailService.enviarEmail(controlador.getEmail(), "Recuperação de Senha", "Seu código de autenticação é: " + controlador.getCodigoAutenticacao() + "/nVálido por 5 minutos.");
-                
-                String codigoInserido = JOptionPane.showInputDialog(
-                    EsqueceuSenhaEmail.this,
-                    "Enviamos um código para " + email + "\nDigite o código recebido:",
-                    "Verificação de Código",
-                    JOptionPane.PLAIN_MESSAGE
-                );
-                
-                if (codigoInserido != null && codigoInserido.equals(controlador.getCodigoAutenticacao())) {
-                    
-                    mostrarDialogoNovaSenha();
-                } else {
+                    String codigoInserido = JOptionPane.showInputDialog(
+                        EsqueceuSenhaEmail.this,
+                        "Enviamos um código para " + email + "\nDigite o código recebido:",
+                        "Verificação de Código",
+                        JOptionPane.PLAIN_MESSAGE
+                    );
+                                        
+                    if (emailController.confirmaCodigo(codigoInserido)){
+                        mostrarDialogoNovaSenha(email);
+                    }
+                } catch (EmailException | BusinessException | SystemException ee){
                     JOptionPane.showMessageDialog(EsqueceuSenhaEmail.this,
-                            "Código inválido ou expirado",
-                            "Erro",
-                            JOptionPane.ERROR_MESSAGE);
+                        ee.getMessage(),
+                        "Erro",
+                        JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -144,13 +124,7 @@ public class EsqueceuSenhaEmail extends JFrame {
         mainPanel.add(voltarBtn);
     }
     
-    /*private String gerarCodigoAutenticacao() {
-        Random random = new Random();
-        int codigo = 100000 + random.nextInt(999999);
-        return String.valueOf(codigo);
-    }*/
-    
-    private void mostrarDialogoNovaSenha() {
+    private void mostrarDialogoNovaSenha(String email) {
         JPanel panel = new JPanel(new GridLayout(3, 1, 10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         
@@ -174,27 +148,22 @@ public class EsqueceuSenhaEmail extends JFrame {
             String novaSenha = new String(senhaField.getPassword());
             String confirmaSenha = new String(confirmaSenhaField.getPassword());
             
-            if (novaSenha.isEmpty() || confirmaSenha.isEmpty()) {
+            try{
+                UserController userController = new UserController();
+                userController.trocaSenhaController(email, novaSenha, confirmaSenha);
+                
                 JOptionPane.showMessageDialog(this,
-                        "Por favor, preencha ambos os campos",
-                        "Atenção",
-                        JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            
-            if (!novaSenha.equals(confirmaSenha)) {
-                JOptionPane.showMessageDialog(this,
-                        "As senhas não coincidem",
-                        "Erro",
-                        JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            
-            JOptionPane.showMessageDialog(this,
                     "Senha alterada com sucesso!",
                     "Sucesso",
                     JOptionPane.INFORMATION_MESSAGE);
-
+                
+            } catch(BusinessException | EmailException | SystemException ee){
+                JOptionPane.showMessageDialog(EsqueceuSenhaEmail.this,
+                        ee.getMessage(),
+                        "Erro",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+  
             LoginInterface loginFrame = new LoginInterface();
             loginFrame.setVisible(true);
             dispose();

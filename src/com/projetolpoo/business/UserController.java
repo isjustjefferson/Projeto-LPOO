@@ -61,4 +61,30 @@ public class UserController {
             throw new BusinessException ("Usuário não encontrado.");
         }
     }
+    
+    public void trocaSenhaController(String email, String novaSenha, String confirmaNovaSenha){
+        
+        if (novaSenha.isBlank()){
+            throw new BusinessException("Os campos não podem estar vazios.");
+        }
+        
+        if (confirmaNovaSenha.isBlank()){
+            throw new BusinessException("Os campos não estar vazios.");
+        }
+        
+        if (!novaSenha.equals(confirmaNovaSenha)){
+            throw new BusinessException("A senha precisa ser igual a confirmação.");
+        }
+        
+        if (novaSenha.length()<8){
+            throw new BusinessException("A senha precisa ter 8 dígitos ou mais.");
+        }
+        
+        if (confirmaNovaSenha.length()<8){
+            throw new BusinessException("A senha precisa ter 8 dígitos ou mais.");
+        }
+        
+        UserRepository userRepository = new UserRepository();
+        userRepository.trocaSenhaRepository(email, novaSenha);
+    }
 }

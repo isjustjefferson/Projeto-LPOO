@@ -31,7 +31,7 @@ public class UserRepository extends DataBaseConnection implements Repository<Use
             stmt.setString(1, email);
             ResultSet result = stmt.executeQuery();
             return result.next();
-        }catch (Exception e){
+        } catch (Exception e){
             throw new SystemException("Erro no sistema", e);
         }
     }
@@ -44,9 +44,20 @@ public class UserRepository extends DataBaseConnection implements Repository<Use
             stmt.setString(2, senha);
             ResultSet result = stmt.executeQuery();
             return result.next();
-        }catch (Exception e){
+        } catch (Exception e){
             throw new SystemException("Erro no sistema", e);
         }
     }
     
+    public void trocaSenhaRepository(String email, String novaSenha){
+        try{
+            Connection conn = connect();
+            PreparedStatement stmt = conn.prepareStatement("UPDATE user SET senha = ? WHERE email = ?");
+            stmt.setString(1, novaSenha);
+            stmt.setString(2, email);
+            stmt.execute();
+        } catch (Exception e){
+            throw new SystemException("Erro no sistema",e);
+        }
+    }
 }
