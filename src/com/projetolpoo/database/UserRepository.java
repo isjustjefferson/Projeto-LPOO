@@ -98,21 +98,21 @@ public class UserRepository extends DataBaseConnection implements Repository<Use
         return null;
     }
     
-    public User instanciaUserRepository(String email){
+    public ResultSet instanciaUserRepository(String email){
+        ResultSet result = null;
         try{
             Connection conn = connect();
             PreparedStatement stmt = conn.prepareStatement("SELECT nome, email, senha FROM user WHERE email=?");
             stmt.setString(1, email);
             
-            ResultSet result = stmt.executeQuery();
+            result = stmt.executeQuery();
             if (result.next()){
-                User user = new User(result.getString("nome"),result.getString("email"),result.getString("senha"));
-                return user;
+                return result;
             }
         }catch (Exception e){
             throw new SystemException("Erro no sistema", e);
         }
-        return null;
+        return result;
     }
 }
         

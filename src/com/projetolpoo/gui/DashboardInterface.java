@@ -38,6 +38,7 @@ import javax.swing.border.LineBorder;
 import com.projetolpoo.entities.Account;
 import com.projetolpoo.entities.Meta;
 import com.projetolpoo.entities.Transacao;
+import com.projetolpoo.entities.User;
 import java.awt.Color;
 import javax.swing.JSlider;
 import javax.swing.JComboBox;
@@ -63,6 +64,8 @@ public class DashboardInterface extends JFrame {
     private JLabel valorRecVarLabel;
     private JLabel valorDespFixasLabel;
     private JLabel valorDespVarLabel;
+    private final UserController userController = new UserController();
+        
 
     public static void main(String[] args) {
 	EventQueue.invokeLater(new Runnable() {
@@ -111,34 +114,35 @@ public class DashboardInterface extends JFrame {
 	profileDashboard.add(profilePhotoPanel);
 	profilePhotoPanel.setCornerRadius(100);
                 
-	UserController userController = new UserController();
-        if (userController.getUserInstance() != null && userController.getUserInstance().getImagem() == null){
+	/*if (userController.getUserInstance() == null){
             try {
-                ImageIcon icon = new ImageIcon("src/imagens/foto_padrao.png"); 
+                ImageIcon icon = new ImageIcon("resources/imagens/foto_padrao.jpg"); 
                 Image img = icon.getImage().getScaledInstance(
                     profilePhotoPanel.getWidth(),
                     profilePhotoPanel.getHeight(),
                     Image.SCALE_SMOOTH);
                     profilePhotoPanel.setImage(img);
+                    profilePhotoPanel.repaint();
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, 
                     "Erro ao carregar imagem padrão: " + ex.getMessage());
             }
-        } else {
+        } else {*/
             try {
-                ImageIcon icon = new ImageIcon(userController.selecionaImagemController()); 
+                ImageIcon icon = userController.selecionaImagemController(); 
                 Image img = icon.getImage().getScaledInstance(
                     profilePhotoPanel.getWidth(),
                     profilePhotoPanel.getHeight(),
                     Image.SCALE_SMOOTH);
                     profilePhotoPanel.setImage(img);
+                    profilePhotoPanel.repaint();
             } catch (Exception ex){
                 JOptionPane.showMessageDialog(this, 
                     "Erro ao carregar imagem: " + ex.getMessage());
                 }
-            }			
+            //}			
 		
-	escolherFotoBtn.addActionListener(e -> {
+	escolherFotoBtn.addActionListener((ActionEvent e) -> {
 	JFileChooser fileChooser = new JFileChooser();
 	fileChooser.setDialogTitle("Selecionar imagem de perfil");
 	fileChooser.setAcceptAllFileFilterUsed(false);
@@ -149,6 +153,7 @@ public class DashboardInterface extends JFrame {
 	if (result == JFileChooser.APPROVE_OPTION) {
             try {
 		ImageIcon icon = new ImageIcon(fileChooser.getSelectedFile().getAbsolutePath());
+                userController.registraImagem(icon);
                 Image img = icon.getImage().getScaledInstance(
                     profilePhotoPanel.getWidth(), 
                     profilePhotoPanel.getHeight(), 
@@ -158,7 +163,7 @@ public class DashboardInterface extends JFrame {
             } catch (Exception ex) {
 		JOptionPane.showMessageDialog(this,
                         "Erro ao carregar imagem: " + ex.getMessage());
-            }
+                }
             }
         });
 		

@@ -6,12 +6,13 @@ import com.projetolpoo.entities.User;
 import com.projetolpoo.exception.BusinessException;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.sql.ResultSet;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 public class UserController {
     
-    private User userInstance;
+    private static User userInstance;
     
     public void registraUsuario(String nome, String email, String senha, String confirmacaoSenha){
         
@@ -108,21 +109,24 @@ public class UserController {
         return baos.toByteArray();
     }
     
-    public void registraImagem(String email, ImageIcon imagem){
+    public void registraImagem(ImageIcon imagem){
         try {
             byte[] imagemBytes=imageIconToBytes(imagem, "jpg");
             
             UserRepository userRepository = new UserRepository();
-            userRepository.insereImagem(imagemBytes, email); 
+            userRepository.insereImagem(imagemBytes, userInstance.getEmail()); 
         } catch (Exception ex) {
+            ex.printStackTrace();
             throw new BusinessException("Não foi possível registrar a imagem.");
         }
     }
     
-    public byte[] selecionaImagemController(){
+    public ImageIcon selecionaImagemController(){
         try{
             UserRepository userRepository = new UserRepository();
-            return userRepository.selecionaImagemRepository(getUserInstance());
+            byte[] imagemBytes = userRepository.selecionaImagemRepository(userInstance);
+            ImageIcon imagem = new ImageIcon(imagemBytes); 
+            return imagem;
         }catch (Exception e){
             throw new BusinessException("Não foi possível selecionar a imagem.");
         }
@@ -131,7 +135,8 @@ public class UserController {
     public void instanciaUserController(String email) {
         try{
             UserRepository userRepository = new UserRepository();
-            setUserInstance(userRepository.instanciaUserRepository(email));
+            ResultSet result = userRepository.instanciaUserRepository(email);
+            userInstance = new User(result.getString("nome"),result.getString("email"),result.getString("senha"));
         }catch (Exception e){
             throw new BusinessException("Não foi possível conectar a sua conta.");
         }
