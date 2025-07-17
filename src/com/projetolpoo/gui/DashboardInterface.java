@@ -48,6 +48,11 @@ import javax.swing.JTextArea;
 import java.awt.Cursor;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import org.jfree.chart.axis.DateAxis;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.ui.TextAnchor;
 
 public class DashboardInterface extends JFrame {
 
@@ -488,32 +493,50 @@ public class DashboardInterface extends JFrame {
         graficoPanel.removeAll();
         graficoPanel.setLayout(new GridLayout(1, 1));
         TimeSeries series = new TimeSeries("Evolução do Saldo");
-        double saldoCumulativo = 0.0;
-	    
-        contaDoUsuario.getTransacoes().sort((t1, t2) -> t1.getData().compareTo(t2.getData()));
-        for (Transacao t : this.contaDoUsuario.getTransacoes()) {
-            saldoCumulativo += t.getValor();
-            series.addOrUpdate(new Day(t.getData().getDayOfMonth(), t.getData().getMonthValue(), t.getData().getYear()), saldoCumulativo);
+        if (!contaDoUsuario.getTransacoes().isEmpty()) {
+            contaDoUsuario.getTransacoes().sort((t1, t2) -> t1.getData().compareTo(t2.getData()));
+            double saldoCalculado = 0.0;
+            for (Transacao t : this.contaDoUsuario.getTransacoes()) {
+                saldoCalculado += t.getValor();
+                series.addOrUpdate(new Day(t.getData().getDayOfMonth(), t.getData().getMonthValue(), t.getData().getYear()), saldoCalculado);
+            }
         }
-	    
-	TimeSeriesCollection dataset = new TimeSeriesCollection();
-	dataset.addSeries(series);
-
-	JFreeChart chart = ChartFactory.createTimeSeriesChart("Evolução do Saldo", "Data", "Saldo (R$)", dataset, false, true, false);
-	XYPlot plot = chart.getXYPlot();
-	plot.clearRangeMarkers();
-	    
-	if (metaSelecionada != null) {
-	    ValueMarker marker = new ValueMarker(metaSelecionada.getValorAlvo());
-	    marker.setPaint(Color.GREEN);
-	    marker.setLabel(String.format("Meta: %s (R$ %d)", metaSelecionada.getNome(), metaSelecionada.getValorAlvo()));
-	    marker.setLabelFont(new Font("SansSerif", Font.BOLD, 12));
-	    plot.addRangeMarker(marker);
-	}
-	    
-	ChartPanel chartPanel = new ChartPanel(chart);
-	graficoPanel.add(chartPanel);
-	graficoPanel.revalidate();
-	graficoPanel.repaint();
-	}
-}
+        TimeSeriesCollection dataset = new TimeSeriesCollection();
+        dataset.addSeries(series);
+        JFreeChart chart = ChartFactory.createTimeSeriesChart("Evolução do Saldo", "Data", "Saldo (R$)", dataset, false, true, false);
+        XYPlot plot = chart.getXYPlot();
+        NumberAxis yAxis = (NumberAxis) plot.getRangeAxis();
+        DateAxis xAxis = (DateAxis) plot.getDomainAxis();
+        NumberFormat formatador = NumberFormat.getNumberInstance();
+        formatador.setGroupingUsed(false);
+        yAxis.setNumberFormatOverride(formatador);
+        xAxis.setDateFormatOverride(new SimpleDateFormat("dd/MM"));
+        if (contaDoUsuario.getTransacoes().isEmpty()) {
+            yAxis.setRange(0.0, 1000.0);
+        } else if (contaDoUsuario.getTransacoes().size() == 1) {
+            double valorUnico = contaDoUsuario.getTransacoes().get(0).getValor();
+            yAxis.setRange(0.0, Math.max(100.0, valorUnico * 1.5));
+        }
+        plot.clearRangeMarkers();
+        if (metaSelecionada != null) {
+            ValueMarker marker = new ValueMarker(metaSelecionada.getValorAlvo());
+            marker.setPaint(Color.GREEN);
+            marker.setLabel(String.format("Meta: %s (R$ %d)", metaSelecionada.getNome(), metaSelecionada.getValorAlvo()));
+            marker.setLabelFont(new Font("SansSerif", Font.BOLD, 12));
+            marker.setLabelAnchor(RectangleAnchor.TOP);
+            plot.addRangeMarker(marker);
+           
+            if (metaSelecionada.getValorAlvo() > yAxis.getUpperBound()) {
+                yAxis.setUpperBound(metaSelecionada.getValorAlvo() * 1.2);
+            }
+            if (metaSelecionada.getValorAlvo() < yAxis.getLowerBound()) {
+                yAxis.setLowerBound(Math.max(0.0, metaSelecionada.getValorAlvo() * 0.6));
+            }
+        }
+        ChartPanel chartPanel = new ChartPanel(chart);
+        graficoPanel.add(chartPanel);
+        graficoPanel.revalidate();
+        graficoPanel.repaint();
+    }
+ 	   
+ }
