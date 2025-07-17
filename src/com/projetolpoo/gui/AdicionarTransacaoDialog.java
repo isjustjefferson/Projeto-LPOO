@@ -14,6 +14,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import com.projetolpoo.entities.Transacao;
 import java.time.LocalDate;
+import javax.swing.JRadioButton;
 
 public class AdicionarTransacaoDialog extends JDialog {
 
@@ -33,17 +34,31 @@ public class AdicionarTransacaoDialog extends JDialog {
         JPanel contentPanel = new JPanel();
         contentPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
-        
-        contentPanel.setLayout(new GridBagLayout());
+        contentPanel.setLayout(null);
         // ... (código do layout do formulário, similar ao de Metas)
 
-        contentPanel.add(new JLabel("Nome:"), new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.EAST, 0, new Insets(0, 0, 5, 5), 0, 0));
+        JLabel label = new JLabel("Nome:");
+        label.setBounds(38, 32, 38, 14);
+        contentPanel.add(label);
         descricaoField = new JTextField();
-        contentPanel.add(descricaoField, new GridBagConstraints(1, 0, 1, 1, 1.0, 0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 5, 0), 0, 0));
+        descricaoField.setBounds(81, 30, 354, 18);
+        contentPanel.add(descricaoField);
         
-        contentPanel.add(new JLabel("Valor (R$):"), new GridBagConstraints(0, 1, 1, 1, 0, 0, GridBagConstraints.EAST, 0, new Insets(0, 0, 0, 5), 0, 0));
+        JLabel label_1 = new JLabel("Valor (R$):");
+        label_1.setBounds(15, 55, 61, 14);
+        contentPanel.add(label_1);
         valorField = new JTextField();
-        contentPanel.add(valorField, new GridBagConstraints(1, 1, 1, 1, 1.0, 0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+        valorField.setBounds(81, 53, 354, 18);
+        contentPanel.add(valorField);
+        
+        JRadioButton rdbtnFixo = new JRadioButton("Fixo");
+        rdbtnFixo.setBounds(157, 79, 49, 22);
+        contentPanel.add(rdbtnFixo);
+        
+        JRadioButton rdbtnVar = new JRadioButton("Variavel");
+        rdbtnVar.setActionCommand("Variavel");
+        rdbtnVar.setBounds(224, 79, 72, 22);
+        contentPanel.add(rdbtnVar);
 
         JPanel buttonPane = new JPanel();
         getContentPane().add(buttonPane, BorderLayout.SOUTH);

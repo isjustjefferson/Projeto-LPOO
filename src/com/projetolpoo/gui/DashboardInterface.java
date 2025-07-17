@@ -493,7 +493,7 @@ public class DashboardInterface extends JFrame {
         contaDoUsuario.getTransacoes().sort((t1, t2) -> t1.getData().compareTo(t2.getData()));
         for (Transacao t : this.contaDoUsuario.getTransacoes()) {
             saldoCumulativo += t.getValor();
-            series.add(new Day(t.getData().getDayOfMonth(), t.getData().getMonthValue(), t.getData().getYear()), saldoCumulativo);
+            series.addOrUpdate(new Day(t.getData().getDayOfMonth(), t.getData().getMonthValue(), t.getData().getYear()), saldoCumulativo);
         }
 	    
 	TimeSeriesCollection dataset = new TimeSeriesCollection();

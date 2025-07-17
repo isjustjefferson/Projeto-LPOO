@@ -43,6 +43,7 @@ public class RegisterInterface extends JFrame {
     private JTextField verificationCodeField;
     private String tempNome;
     private String tempEmail;
+    private String tempCEmail;
     private String tempSenha;
     private String tempConfirmacaoSenha;
     
@@ -144,6 +145,7 @@ public class RegisterInterface extends JFrame {
                     String confirmacaoEmail = confirmacaoEmailRegisterField.getText();
                     char[] senhaChars = senhaRegisterField.getPassword();
                     char[] confirmacaoChars = confirmacaoSenhaRegisterField.getPassword();
+                    tempCEmail = new String(confirmacaoEmail);
                     tempSenha = new String(senhaChars);
                     tempConfirmacaoSenha = new String(confirmacaoChars);
                     
