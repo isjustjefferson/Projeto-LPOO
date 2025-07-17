@@ -1,6 +1,9 @@
 package com.projetolpoo.gui;
 
 import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -11,8 +14,8 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import com.projetolpoo.entities.Transacao;
 import java.time.LocalDate;
-import com.projetolpoo.gui.DashboardInterface;
-import java.awt.Dimension;
+import javax.swing.JRadioButton;
+
 public class AdicionarTransacaoDialog extends JDialog {
 
     private static final long serialVersionUID = 1L;
@@ -34,38 +37,40 @@ public class AdicionarTransacaoDialog extends JDialog {
         contentPanel.setLayout(null);
         // ... (código do layout do formulário, similar ao de Metas)
 
-        JLabel nomeLabel = new JLabel("Nome:");
-        nomeLabel.setBounds(38, 32, 38, 14);
-        contentPanel.add(nomeLabel);
+        JLabel label = new JLabel("Nome:");
+        label.setBounds(38, 32, 38, 14);
+        contentPanel.add(label);
         descricaoField = new JTextField();
         descricaoField.setBounds(81, 30, 354, 18);
         contentPanel.add(descricaoField);
         
-        JLabel valorLabel = new JLabel("Valor (R$):");
-        valorLabel.setBounds(15, 55, 61, 14);
-        contentPanel.add(valorLabel);
+        JLabel label_1 = new JLabel("Valor (R$):");
+        label_1.setBounds(15, 55, 61, 14);
+        contentPanel.add(label_1);
         valorField = new JTextField();
         valorField.setBounds(81, 53, 354, 18);
         contentPanel.add(valorField);
-        JButton fixaButton = new JButton("Fixa");
         
-        fixaButton.setBounds(141, 83, 81, 24);
-        contentPanel.add(fixaButton);
-        fixaButton.addActionListener(e -> Fixa());
+        JRadioButton rdbtnFixo = new JRadioButton("Fixo");
+        rdbtnFixo.setBounds(157, 79, 49, 22);
+        contentPanel.add(rdbtnFixo);
         
-        JButton variavelBtn = new JButton("Variável");
-        variavelBtn.setBounds(231, 83, 81, 24);
-        contentPanel.add(variavelBtn);
+        JRadioButton rdbtnVar = new JRadioButton("Variavel");
+        rdbtnVar.setActionCommand("Variavel");
+        rdbtnVar.setBounds(224, 79, 72, 22);
+        contentPanel.add(rdbtnVar);
 
         JPanel buttonPane = new JPanel();
         getContentPane().add(buttonPane, BorderLayout.SOUTH);
+        JButton salvarButton = new JButton("Salvar");
+        salvarButton.addActionListener(e -> onSalvar());
+        buttonPane.add(salvarButton);
         JButton cancelarButton = new JButton("Cancelar");
         cancelarButton.addActionListener(e -> onCancelar());
         buttonPane.add(cancelarButton);
     }
 
-    private void Fixa() {
-    	/*receitasFixas = valorField;*/
+    private void onSalvar() {
         String descricao = descricaoField.getText();
         String valorStr = valorField.getText().replace(",", ".");
 

@@ -461,26 +461,24 @@ public class DashboardInterface extends JFrame {
     }
 
     private void atualizarValoresFinanceiros() {
-        double receitasFixas = 0;
-    	double ReceitasVariaveis = 0;
-    	double despesasFixas = 0;
-        double DespesasVariaveis = 0;
+        double totalReceitasVariaveis = 0;
+        double totalDespesasVariaveis = 0;
         double saldoCalculado = 0;
 
         for (Transacao t : contaDoUsuario.getTransacoes()) {
             saldoCalculado += t.getValor();
             if (t.getValor() > 0) {
-                ReceitasVariaveis += t.getValor();
+                totalReceitasVariaveis += t.getValor();
             } else {
-                DespesasVariaveis += t.getValor();
+                totalDespesasVariaveis += t.getValor();
             }
         }
 
         valorSaldoLabel.setText(String.format("R$ %.2f", saldoCalculado));
-        valorRecFixasLabel.setText(String.format("R$ %.2f", receitasFixas));
-        valorRecVarLabel.setText(String.format("R$ %.2f", ReceitasVariaveis));
-        valorDespFixasLabel.setText(String.format("R$ %.2f", despesasFixas));
-        valorDespVarLabel.setText(String.format("R$ %.2f", DespesasVariaveis));
+        valorRecFixasLabel.setText("R$ 0.00");
+        valorRecVarLabel.setText(String.format("R$ %.2f", totalReceitasVariaveis));
+        valorDespFixasLabel.setText("R$ 0.00");
+        valorDespVarLabel.setText(String.format("R$ %.2f", totalDespesasVariaveis));
     }
 
     private void atualizarMetasComboBox() {
