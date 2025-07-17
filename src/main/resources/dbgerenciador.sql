@@ -7,6 +7,4 @@ CREATE TABLE IF NOT EXISTS user(
     senha varchar(50) NOT NULL,
     imagem LONGBLOB
 );
-DROP TABLE user;
 SELECT * FROM user;
-UNLOCK TABLES;
