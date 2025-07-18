@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class DataBaseConnection {
     
-    private final String URL = "jdbc:sqlite:./dbgerenciadorsqlite.db";
+    private final String URL = "jdbc:sqlite:./dbgerenciadorsqlite.db?journal_mode=WAL";
    
     public Connection connect() throws ClassNotFoundException, SQLException{
         Class.forName("org.sqlite.JDBC");

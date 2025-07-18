@@ -146,7 +146,7 @@ public class EsqueceuSenhaEmail extends JFrame {
             String confirmaSenha = new String(confirmaSenhaField.getPassword());
             
             try{
-                UserController userController = new UserController();
+                UserController userController = UserController.getInstanceUserController();
                 userController.trocaSenhaController(email, novaSenha, confirmaSenha);
                 
                 JOptionPane.showMessageDialog(this,

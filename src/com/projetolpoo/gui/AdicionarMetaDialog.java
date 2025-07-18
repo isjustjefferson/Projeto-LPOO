@@ -1,5 +1,6 @@
 package com.projetolpoo.gui;
 
+import com.projetolpoo.business.MetaController;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -69,6 +70,9 @@ public class AdicionarMetaDialog extends JDialog {
                  return;
             }
             this.novaMeta = new Meta(nome, valor);
+            MetaController metaController = new MetaController();
+            metaController.adicionarMeta(novaMeta);
+            
             dispose();
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "O valor deve ser um número válido (ex: 5000).", "Erro de Formato", JOptionPane.ERROR_MESSAGE);

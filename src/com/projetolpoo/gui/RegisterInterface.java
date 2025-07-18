@@ -243,7 +243,7 @@ public class RegisterInterface extends JFrame {
             try{
                 String codigoInserido=verificationCodeField.getText().trim();
                 if(EmailController.getInstance().confirmaCodigo(codigoInserido)){
-                    UserController userController = new UserController();
+                    UserController userController = UserController.getInstanceUserController();
                     userController.registraUsuario(tempNome, tempEmail, tempSenha, tempConfirmacaoSenha);
                     JOptionPane.showMessageDialog(verificationDialog, 
                         "Cadastro realizado com sucesso!", 

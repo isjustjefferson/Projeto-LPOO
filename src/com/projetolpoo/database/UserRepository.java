@@ -8,9 +8,8 @@ import java.sql.ResultSet;
 import com.projetolpoo.entities.User;
 import com.projetolpoo.exception.SystemException;
 
-public class UserRepository extends DataBaseConnection implements Repository<User>{
+public class UserRepository extends DataBaseConnection{
 
-    @Override
     public void insert(User user) {
         try{
             Connection conn=connect();
@@ -24,7 +23,6 @@ public class UserRepository extends DataBaseConnection implements Repository<Use
         }
     }
 
-    @Override
     public boolean confirm(String email) {
         try{
             Connection conn = connect();
@@ -72,8 +70,6 @@ public class UserRepository extends DataBaseConnection implements Repository<Use
             stmt.setString(2, email);
 
             stmt.executeUpdate();
-            stmt.close();
-
         } catch (Exception e){
             throw new SystemException("Erro no sistema", e);
         }
@@ -107,10 +103,9 @@ public class UserRepository extends DataBaseConnection implements Repository<Use
             Connection conn = connect();
             PreparedStatement stmt = conn.prepareStatement("SELECT nome, email, senha FROM user WHERE email=?");
             stmt.setString(1, email);
-            
             result = stmt.executeQuery();
             if (result.next()){
-                UserController userController = new UserController();
+                UserController userController = UserController.getInstanceUserController();
                 User user = new User(result.getString("nome"), result.getString("email"), result.getString("senha"));
                 userController.setUserInstance(user);
             }

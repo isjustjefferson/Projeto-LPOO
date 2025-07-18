@@ -12,6 +12,19 @@ import javax.swing.ImageIcon;
 
 public class UserController {
     
+    private static UserController userControllerInstance;
+    
+    private UserController(){
+        
+    }
+    
+    public static UserController getInstanceUserController(){
+        if (userControllerInstance == null){
+            userControllerInstance = new UserController();
+        }
+        return userControllerInstance;
+    }
+    
     private static User userInstance;
     
     public void registraUsuario(String nome, String email, String senha, String confirmacaoSenha){
@@ -41,7 +54,7 @@ public class UserController {
         }
         
         User user = new User(nome, email, senha);
-        Repository repository = new UserRepository();
+        UserRepository repository = new UserRepository();
         boolean existe = repository.confirm(email);
         
         if (existe){

@@ -110,7 +110,7 @@ public class LoginInterface extends JFrame {
                 boolean manterConectado = manterConectadoCheckBox.isSelected();
 
                 try {
-                    UserController userController = new UserController();
+                    UserController userController = UserController.getInstanceUserController();
                     userController.confirmaUsuario(email, senha);
                     
                     if(manterConectado) {

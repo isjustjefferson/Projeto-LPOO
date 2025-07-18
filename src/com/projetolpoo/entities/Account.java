@@ -1,5 +1,7 @@
 package com.projetolpoo.entities;
 
+import com.projetolpoo.business.MetaController;
+import com.projetolpoo.business.UserController;
 import java.io.Serializable; 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +20,6 @@ public class Account implements Serializable {
     public Account() { //Garante que uma Conta sempre comece com o saldo zerado (Calma, Elton!)
         this.balance = 0; 
     }
-
    
     public void adicionarTransacao(Transacao transacao) { //Adicionar e atualiza o "Balance"
         if (transacao != null) {
@@ -33,7 +34,6 @@ public class Account implements Serializable {
         }
     }
 
-
     public int getBalance() {
         return balance;
     }
@@ -43,9 +43,13 @@ public class Account implements Serializable {
     }
 
     public List<Meta> getMetas() {
+        MetaController metaController = new MetaController();
+        UserController userController = UserController.getInstanceUserController();
+        String email = userController.getUserInstance().getEmail();
+        metas = metaController.getAllMetas(email);
         return metas;
     }
-
+    
     public void setMetas(List<Meta> metas) {
         this.metas = metas;
     }

@@ -20,13 +20,13 @@ public class bd {
         Connection conn;
         try {
             conn = connect();
-            PreparedStatement stmt = conn.prepareStatement("CREATE TABLE IF NOT EXISTS user("
-                    + "id_user INTEGER AUTO_INCREMENT UNIQUE,"
+            //PreparedStatement stmt = conn.prepareStatement("DROP TABLE meta");
+            PreparedStatement stmt = conn.prepareStatement("CREATE TABLE IF NOT EXISTS meta("
+                    + "id_meta INTEGER AUTO_INCREMENT PRIMARY KEY,"
                     + "nome TEXT NOT NULL,"
-                    + "email TEXT NOT NULL PRIMARY KEY,"
-                    + "senha TEXT NOT NULL,"
-                    + "saldo INTEGER, "
-                    + "imagem BLOB"
+                    + "valor_alvo INTEGER NOT NULL,"
+                    + "fk_user_email TEXT NOT NULL,"
+                    + "FOREIGN KEY (fk_user_email) REFERENCES user(email)"
                     + ");");
             stmt.execute();
             System.out.println("TABELA CRIADA!");

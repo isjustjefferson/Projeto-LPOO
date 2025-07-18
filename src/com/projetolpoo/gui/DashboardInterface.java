@@ -1,5 +1,7 @@
 package com.projetolpoo.gui;
 
+import com.projetolpoo.business.AccountController;
+import com.projetolpoo.business.MetaController;
 import com.projetolpoo.business.UserController;
 import java.awt.EventQueue;
 import javax.swing.ImageIcon;
@@ -70,7 +72,8 @@ public class DashboardInterface extends JFrame {
     private JLabel valorRecVarLabel;
     private JLabel valorDespFixasLabel;
     private JLabel valorDespVarLabel;
-    private final UserController userController = new UserController();
+    private final UserController userController = UserController.getInstanceUserController();
+    private final AccountController accountController = new AccountController();
         
 
     public static void main(String[] args) {
@@ -87,8 +90,8 @@ public class DashboardInterface extends JFrame {
     }
 
     public DashboardInterface() {
-	this.contaDoUsuario = new Account();
-	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	this.contaDoUsuario = accountController.getAccountInstance();
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	setBounds(100, 100, 1080, 720);
 	setLocationRelativeTo(null);
 	setResizable(false);
@@ -201,7 +204,7 @@ public class DashboardInterface extends JFrame {
 	public void actionPerformed(ActionEvent e) {
             Object itemSelecionado = comboBoxMetas.getSelectedItem();
 	    if (!(itemSelecionado instanceof Meta)) {
-	    JOptionPane.showMessageDialog(
+            JOptionPane.showMessageDialog(
 	        DashboardInterface.this, 
 	        "Por favor, selecione uma meta válida para remover.", 
 	        "Nenhuma Meta Selecionada", 
@@ -224,6 +227,8 @@ public class DashboardInterface extends JFrame {
 	        );
 
                 if (resposta == 0) { 
+                    MetaController metaController = new MetaController();
+                    metaController.removeMeta(metaParaRemover);
 	            contaDoUsuario.getMetas().remove(metaParaRemover);
 	            atualizarMetasComboBox();
 	            desenharGrafico(null);
@@ -239,7 +244,7 @@ public class DashboardInterface extends JFrame {
 	functionsDashboardPanel.setLayout(null);
 		
 	JButton perfilBtn = new JButton("Perfil");
-    perfilBtn.addActionListener(new ActionListener() {
+        perfilBtn.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             PerfilConfigDialog perfilDialog = new PerfilConfigDialog(DashboardInterface.this, userController);
             perfilDialog.setVisible(true);
