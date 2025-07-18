@@ -10,15 +10,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 import java.awt.Color;
-import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.GridLayout;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JPasswordField;
 
 public class EsqueceuSenhaEmail extends JFrame {
     private static final long serialVersionUID = 1L;
@@ -43,6 +37,11 @@ public class EsqueceuSenhaEmail extends JFrame {
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         contentPane.setLayout(null);
         setContentPane(contentPane);
+        
+        JLabel juliusLabel = new JLabel("");
+        juliusLabel.setIcon(new ImageIcon(LoginInterface.class.getResource("/imagens/julius_principal.png")));
+        juliusLabel.setBounds(0, 0, 658, 695);
+        contentPane.add(juliusLabel);
         
         JPanel mainPanel = new JPanel();
         mainPanel.setBounds(658, 0, 422, 720);

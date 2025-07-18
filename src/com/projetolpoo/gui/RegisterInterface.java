@@ -13,6 +13,7 @@ import java.util.Arrays;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -80,6 +81,11 @@ public class RegisterInterface extends JFrame {
         registerPanel.setBackground(Color.WHITE);
         registerPanel.setLayout(null);
         contentPane.add(registerPanel);
+        
+        JLabel juliusLabel = new JLabel("");
+        juliusLabel.setIcon(new ImageIcon(LoginInterface.class.getResource("/imagens/julius_principal.png")));
+        juliusLabel.setBounds(0, 0, 658, 695);
+        contentPane.add(juliusLabel);
         
         JLabel registerLabel = new JLabel("CADASTRO");
         registerLabel.setBounds(140, 80, 140, 36);
