@@ -9,10 +9,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import com.projetolpoo.entities.Account;
 import com.projetolpoo.entities.Transacao;
 import java.time.LocalDate;
 import com.projetolpoo.gui.DashboardInterface;
 import java.awt.Dimension;
+
 public class AdicionarTransacaoDialog extends JDialog {
 
     private static final long serialVersionUID = 1L;
@@ -20,10 +22,12 @@ public class AdicionarTransacaoDialog extends JDialog {
     private JTextField valorField;
     private Transacao novaTransacao = null;
     private boolean isReceita;
+    private String tipoTransacao;
 
-    public AdicionarTransacaoDialog(JFrame owner, boolean isReceita) {
-        super(owner, "Adicionar Nova " + (isReceita ? "Receita" : "Despesa"), true);
+    public AdicionarTransacaoDialog(JFrame owner, boolean isReceita, Account conta, String tipoPadrao) {
+        super(owner, "Adicionar " + (isReceita ? "Receita " : "Despesa ") + tipoPadrao, true);
         this.isReceita = isReceita;
+        this.tipoTransacao = tipoPadrao;
         
         setBounds(100, 100, 450, 200);
         setLocationRelativeTo(owner);
@@ -47,25 +51,20 @@ public class AdicionarTransacaoDialog extends JDialog {
         valorField = new JTextField();
         valorField.setBounds(81, 53, 354, 18);
         contentPanel.add(valorField);
-        JButton fixaButton = new JButton("Fixa");
         
-        fixaButton.setBounds(141, 83, 81, 24);
-        contentPanel.add(fixaButton);
-        fixaButton.addActionListener(e -> Fixa());
-        
-        JButton variavelBtn = new JButton("Variável");
-        variavelBtn.setBounds(231, 83, 81, 24);
-        contentPanel.add(variavelBtn);
-
         JPanel buttonPane = new JPanel();
         getContentPane().add(buttonPane, BorderLayout.SOUTH);
+        
+        JButton salvarButton = new JButton("Salvar");
+        salvarButton.addActionListener(e -> onSalvar());
+        buttonPane.add(salvarButton);
+
         JButton cancelarButton = new JButton("Cancelar");
         cancelarButton.addActionListener(e -> onCancelar());
         buttonPane.add(cancelarButton);
     }
 
-    private void Fixa() {
-    	/*receitasFixas = valorField;*/
+    private void onSalvar() {
         String descricao = descricaoField.getText();
         String valorStr = valorField.getText().replace(",", ".");
 
@@ -75,7 +74,7 @@ public class AdicionarTransacaoDialog extends JDialog {
         }
 
         try {
-            int valor = Integer.parseInt(valorStr);
+            double valor = Double.parseDouble(valorStr);
             if (valor <= 0) {
                  JOptionPane.showMessageDialog(this, "O valor deve ser um número positivo.", "Erro", JOptionPane.ERROR_MESSAGE);
                  return;
@@ -89,7 +88,9 @@ public class AdicionarTransacaoDialog extends JDialog {
             // AQUI ESTÁ A LÓGICA DA DATA: Pega a data atual do sistema. Simples e garantido.
             LocalDate dataDaTransacao = LocalDate.now();
 
-            this.novaTransacao = new Transacao(descricao, valor, dataDaTransacao);
+            boolean isFixo = this.tipoTransacao.equals("Fixo");
+
+            this.novaTransacao = new Transacao(descricao, valor, dataDaTransacao, isFixo);
             dispose();
             
         } catch (NumberFormatException ex) {

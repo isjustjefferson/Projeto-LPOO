@@ -66,6 +66,7 @@ public class UserController {
         boolean exists = repository.login(getUserInstance());
         
         if (!exists){
+            userInstance = null;
             throw new BusinessException ("Usuário não encontrado.");
         }
     }
@@ -110,6 +111,9 @@ public class UserController {
     }
     
     public void registraImagem(ImageIcon imagem){
+        if (userInstance == null) {
+            throw new BusinessException("Nenhum usuário logado. Não é possível salvar a imagem.");
+        }
         try {
             byte[] imagemBytes=imageIconToBytes(imagem, "jpg");
             
@@ -122,9 +126,15 @@ public class UserController {
     }
     
     public ImageIcon selecionaImagemController(){
+        if (userInstance == null) {
+            return null;
+        }
         try{
             UserRepository userRepository = new UserRepository();
             byte[] imagemBytes = userRepository.selecionaImagemRepository(userInstance);
+            if (imagemBytes == null || imagemBytes.length == 0) {
+                return null;
+            }
             ImageIcon imagem = new ImageIcon(imagemBytes); 
             return imagem;
         }catch (Exception e){
@@ -136,7 +146,9 @@ public class UserController {
         try{
             UserRepository userRepository = new UserRepository();
             ResultSet result = userRepository.instanciaUserRepository(email);
-            userInstance = new User(result.getString("nome"),result.getString("email"),result.getString("senha"));
+            if(result.next()) {
+                userInstance = new User(result.getString("nome"),result.getString("email"),result.getString("senha"));
+            }
         }catch (Exception e){
             throw new BusinessException("Não foi possível conectar a sua conta.");
         }
@@ -147,6 +159,6 @@ public class UserController {
     }
 
     public void setUserInstance(User userInstance) {
-        this.userInstance = userInstance;
+        UserController.userInstance = userInstance;
     }
 }

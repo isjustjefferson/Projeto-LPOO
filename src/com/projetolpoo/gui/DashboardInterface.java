@@ -32,6 +32,7 @@ import java.awt.Component;
 import javax.swing.JToggleButton;
 import java.awt.Rectangle;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.swing.JRadioButton;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
@@ -58,8 +59,8 @@ public class DashboardInterface extends JFrame {
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
-    private JButton addRecBttn;
-    private JButton addDespBttn; // Adicionado como variável de instância
+    private JButton addRecVarBttn;
+    private JButton addDespVarBttn;
     private JComboBox<Object> comboBoxMetas;
     private JPanel graficoPanel;
     private RoundPanel profilePhotoPanel;
@@ -118,34 +119,8 @@ public class DashboardInterface extends JFrame {
 	profilePhotoPanel.setBounds(5, 5, 90, 90);
 	profileDashboard.add(profilePhotoPanel);
 	profilePhotoPanel.setCornerRadius(100);
-                
-	/*if (userController.getUserInstance() == null){
-            try {
-                ImageIcon icon = new ImageIcon("resources/imagens/foto_padrao.jpg"); 
-                Image img = icon.getImage().getScaledInstance(
-                    profilePhotoPanel.getWidth(),
-                    profilePhotoPanel.getHeight(),
-                    Image.SCALE_SMOOTH);
-                    profilePhotoPanel.setImage(img);
-                    profilePhotoPanel.repaint();
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, 
-                    "Erro ao carregar imagem padrão: " + ex.getMessage());
-            }
-        } else {*/
-            try {
-                ImageIcon icon = userController.selecionaImagemController(); 
-                Image img = icon.getImage().getScaledInstance(
-                    profilePhotoPanel.getWidth(),
-                    profilePhotoPanel.getHeight(),
-                    Image.SCALE_SMOOTH);
-                    profilePhotoPanel.setImage(img);
-                    profilePhotoPanel.repaint();
-            } catch (Exception ex){
-                JOptionPane.showMessageDialog(this, 
-                    "Erro ao carregar imagem: " + ex.getMessage());
-                }
-            //}			
+
+    carregarFotoPerfil();	
 		
 	escolherFotoBtn.addActionListener((ActionEvent e) -> {
 	JFileChooser fileChooser = new JFileChooser();
@@ -159,12 +134,7 @@ public class DashboardInterface extends JFrame {
             try {
 		ImageIcon icon = new ImageIcon(fileChooser.getSelectedFile().getAbsolutePath());
                 userController.registraImagem(icon);
-                Image img = icon.getImage().getScaledInstance(
-                    profilePhotoPanel.getWidth(), 
-                    profilePhotoPanel.getHeight(), 
-                    Image.SCALE_SMOOTH);
-                profilePhotoPanel.setImage(img);
-                profilePhotoPanel.repaint();
+                carregarFotoPerfil();
             } catch (Exception ex) {
 		JOptionPane.showMessageDialog(this,
                         "Erro ao carregar imagem: " + ex.getMessage());
@@ -269,6 +239,13 @@ public class DashboardInterface extends JFrame {
 	functionsDashboardPanel.setLayout(null);
 		
 	JButton perfilBtn = new JButton("Perfil");
+    perfilBtn.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            PerfilConfigDialog perfilDialog = new PerfilConfigDialog(DashboardInterface.this, userController);
+            perfilDialog.setVisible(true);
+            carregarFotoPerfil();
+        }
+    });
 	perfilBtn.setFont(new Font("Tahoma", Font.PLAIN, 14));
 	perfilBtn.setBounds(7, 10, 85, 21);
 	functionsDashboardPanel.add(perfilBtn);
@@ -334,35 +311,17 @@ public class DashboardInterface extends JFrame {
 	receitasLabel.setBounds(142, 12, 127, 29);
 	receitasPanel.add(receitasLabel);
 	
-	addRecBttn = new JButton("+");
-	addRecBttn.addActionListener(new ActionListener() {
-	public void actionPerformed(ActionEvent e) {
-            AdicionarTransacaoDialog dialog = new AdicionarTransacaoDialog(DashboardInterface.this, true); // true para Receita
-            dialog.setVisible(true);
-                
-            Transacao novaTransacao = dialog.getNovaTransacao(); // Método corrigido
-                
-            if (novaTransacao != null) {
-                contaDoUsuario.getTransacoes().add(novaTransacao);
-                atualizarValoresFinanceiros();
-                    
-                Object itemSelecionado = comboBoxMetas.getSelectedItem();
-                if(itemSelecionado instanceof Meta) {
-                    desenharGrafico((Meta) itemSelecionado);
-                } else {
-                    desenharGrafico(null);
-                }
-                   
-                JOptionPane.showMessageDialog(DashboardInterface.this, 
-                    "Receita adicionada com sucesso!");
-                }
-            }
+	addRecVarBttn = new JButton("+");
+	addRecVarBttn.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            chamarDialogoTransacao(true, "Variável");
+        }
 	});
 
-        addRecBttn.setMargin(new Insets(2, 2, 2, 2));
-	addRecBttn.setPreferredSize(new Dimension(1, 1));
-	addRecBttn.setBounds(407, 242, 27, 21);
-	receitasPanel.add(addRecBttn);
+    addRecVarBttn.setMargin(new Insets(2, 2, 2, 2));
+	addRecVarBttn.setPreferredSize(new Dimension(1, 1));
+	addRecVarBttn.setBounds(407, 207, 27, 21);
+	receitasPanel.add(addRecVarBttn);
 		
 	JLabel recFixasLabel = new JLabel("Fixas:");
 	recFixasLabel.setFont(new Font("Dialog", Font.BOLD, 25));
@@ -375,6 +334,17 @@ public class DashboardInterface extends JFrame {
 	valorRecFixasLabel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	valorRecFixasLabel.setBounds(50, 94, 334, 44);
 	receitasPanel.add(valorRecFixasLabel);
+
+    JButton addRecFixaBttn = new JButton("+");
+    addRecFixaBttn.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            chamarDialogoTransacao(true, "Fixo");
+        }
+    });
+    addRecFixaBttn.setMargin(new Insets(2, 2, 2, 2));
+    addRecFixaBttn.setPreferredSize(new Dimension(1, 1));
+    addRecFixaBttn.setBounds(407, 115, 27, 21);
+    receitasPanel.add(addRecFixaBttn);
 		
 	JLabel recVarLabel = new JLabel("Variáveis:");
 	recVarLabel.setFont(new Font("Dialog", Font.BOLD, 25));
@@ -400,87 +370,110 @@ public class DashboardInterface extends JFrame {
 	despesasLabel.setBounds(153, 12, 143, 29);
 	despesasPanel.add(despesasLabel);
 		
-	addDespBttn = new JButton("+");
-	addDespBttn.addActionListener(new ActionListener() {
-	public void actionPerformed(ActionEvent e) {
-            AdicionarTransacaoDialog dialog = new AdicionarTransacaoDialog(DashboardInterface.this, false); // false para Despesa
-            dialog.setVisible(true);
-                
-            Transacao novaTransacao = dialog.getNovaTransacao(); // Método corrigido
-                
-            if (novaTransacao != null) {
-                contaDoUsuario.getTransacoes().add(novaTransacao);
-                atualizarValoresFinanceiros();
-                    
-            Object itemSelecionado = comboBoxMetas.getSelectedItem();
-            if(itemSelecionado instanceof Meta) {
-                desenharGrafico((Meta) itemSelecionado);
-            } else {
-                desenharGrafico(null);
-            }
-                    
-            JOptionPane.showMessageDialog(DashboardInterface.this, 
-                "Despesa adicionada com sucesso!");
-                }
-            }
+	addDespVarBttn = new JButton("+");
+	addDespVarBttn.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            chamarDialogoTransacao(false, "Variável");
+        }
 	});
 	
-        addDespBttn.setPreferredSize(new Dimension(1, 1));
-	addDespBttn.setMargin(new Insets(2, 2, 2, 2));
-        addDespBttn.setBounds(407, 242, 27, 21);
-	despesasPanel.add(addDespBttn);
+    addDespVarBttn.setPreferredSize(new Dimension(1, 1));
+	addDespVarBttn.setMargin(new Insets(2, 2, 2, 2));
+    addDespVarBttn.setBounds(407, 207, 27, 21);
+	despesasPanel.add(addDespVarBttn);
 		
-        JLabel despFixasLabel = new JLabel("Fixas:");
+    JLabel despFixasLabel = new JLabel("Fixas:");
 	despFixasLabel.setFont(new Font("Dialog", Font.BOLD, 25));
-        despFixasLabel.setBounds(12, 59, 80, 29);
+    despFixasLabel.setBounds(12, 59, 80, 29);
 	despesasPanel.add(despFixasLabel);
 		
-        valorDespFixasLabel = new JLabel("");
+    valorDespFixasLabel = new JLabel("");
 	valorDespFixasLabel.setFont(new Font("Dialog", Font.BOLD, 25));
-        valorDespFixasLabel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+    valorDespFixasLabel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	valorDespFixasLabel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-        valorDespFixasLabel.setBounds(50, 94, 334, 44);
+    valorDespFixasLabel.setBounds(50, 94, 334, 44);
 	despesasPanel.add(valorDespFixasLabel);
+
+    JButton addDespFixaBttn = new JButton("+");
+    addDespFixaBttn.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            chamarDialogoTransacao(false, "Fixo");
+        }
+    });
+    addDespFixaBttn.setPreferredSize(new Dimension(1, 1));
+    addDespFixaBttn.setMargin(new Insets(2, 2, 2, 2));
+    addDespFixaBttn.setBounds(407, 115, 27, 21);
+    despesasPanel.add(addDespFixaBttn);
 		
-        JLabel despVarLabel = new JLabel("Variáveis:");
-        despVarLabel.setFont(new Font("Dialog", Font.BOLD, 25));
+    JLabel despVarLabel = new JLabel("Variáveis:");
+    despVarLabel.setFont(new Font("Dialog", Font.BOLD, 25));
 	despVarLabel.setBounds(12, 150, 119, 29);
-        despesasPanel.add(despVarLabel);
+    despesasPanel.add(despVarLabel);
 		
 	valorDespVarLabel = new JLabel("");
-        valorDespVarLabel.setFont(new Font("Dialog", Font.BOLD, 25));
+    valorDespVarLabel.setFont(new Font("Dialog", Font.BOLD, 25));
 	valorDespVarLabel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-        valorDespVarLabel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-        valorDespVarLabel.setBounds(50, 186, 334, 44);
+    valorDespVarLabel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+    valorDespVarLabel.setBounds(50, 186, 334, 44);
 	despesasPanel.add(valorDespVarLabel);
 		
-        atualizarMetasComboBox();
-        atualizarValoresFinanceiros();
+    atualizarMetasComboBox();
+    atualizarValoresFinanceiros();
 	desenharGrafico(null);
 		
+    }
+    
+    private void chamarDialogoTransacao(boolean isReceita, String tipoPadrao) {
+        AdicionarTransacaoDialog dialog = new AdicionarTransacaoDialog(this, isReceita, contaDoUsuario, tipoPadrao);
+        dialog.setVisible(true);
+
+        Transacao novaTransacao = dialog.getNovaTransacao();
+
+        if (novaTransacao != null) {
+            contaDoUsuario.getTransacoes().add(novaTransacao);
+            String tipo = isReceita ? "Receita" : "Despesa";
+            JOptionPane.showMessageDialog(DashboardInterface.this, tipo + " adicionada com sucesso!");
+        }
+
+        atualizarValoresFinanceiros();
+        Object itemSelecionado = comboBoxMetas.getSelectedItem();
+        if (itemSelecionado instanceof Meta) {
+            desenharGrafico((Meta) itemSelecionado);
+        } else {
+            desenharGrafico(null);
+        }
     }
 
     private void atualizarValoresFinanceiros() {
         double receitasFixas = 0;
-    	double ReceitasVariaveis = 0;
+    	double receitasVariaveis = 0;
     	double despesasFixas = 0;
-        double DespesasVariaveis = 0;
+        double despesasVariaveis = 0;
         double saldoCalculado = 0;
 
         for (Transacao t : contaDoUsuario.getTransacoes()) {
             saldoCalculado += t.getValor();
             if (t.getValor() > 0) {
-                ReceitasVariaveis += t.getValor();
+                if (t.isFixo()) {
+                    receitasFixas += t.getValor();
+                } else {
+                    receitasVariaveis += t.getValor();
+                }
             } else {
-                DespesasVariaveis += t.getValor();
+                if (t.isFixo()) {
+                    despesasFixas += t.getValor();
+                } else {
+                    despesasVariaveis += t.getValor();
+                }
             }
         }
 
-        valorSaldoLabel.setText(String.format("R$ %.2f", saldoCalculado));
-        valorRecFixasLabel.setText(String.format("R$ %.2f", receitasFixas));
-        valorRecVarLabel.setText(String.format("R$ %.2f", ReceitasVariaveis));
-        valorDespFixasLabel.setText(String.format("R$ %.2f", despesasFixas));
-        valorDespVarLabel.setText(String.format("R$ %.2f", DespesasVariaveis));
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
+        valorSaldoLabel.setText(currencyFormat.format(saldoCalculado));
+        valorRecFixasLabel.setText(currencyFormat.format(receitasFixas));
+        valorRecVarLabel.setText(currencyFormat.format(receitasVariaveis));
+        valorDespFixasLabel.setText(currencyFormat.format(Math.abs(despesasFixas)));
+        valorDespVarLabel.setText(currencyFormat.format(Math.abs(despesasVariaveis)));
     }
 
     private void atualizarMetasComboBox() {
@@ -495,35 +488,43 @@ public class DashboardInterface extends JFrame {
         graficoPanel.removeAll();
         graficoPanel.setLayout(new GridLayout(1, 1));
         TimeSeries series = new TimeSeries("Evolução do Saldo");
-        if (!contaDoUsuario.getTransacoes().isEmpty()) {
-            contaDoUsuario.getTransacoes().sort((t1, t2) -> t1.getData().compareTo(t2.getData()));
-            double saldoCalculado = 0.0;
-            for (Transacao t : this.contaDoUsuario.getTransacoes()) {
-                saldoCalculado += t.getValor();
-                series.addOrUpdate(new Day(t.getData().getDayOfMonth(), t.getData().getMonthValue(), t.getData().getYear()), saldoCalculado);
-            }
+
+        List<Transacao> transacoesValidas = contaDoUsuario.getTransacoes().stream()
+            .filter(t -> t.getData() != null)
+            .collect(Collectors.toList());
+            
+        transacoesValidas.sort((t1, t2) -> t1.getData().compareTo(t2.getData()));
+        
+        double saldoCumulativo = 0.0;
+        for (Transacao t : transacoesValidas) {
+            saldoCumulativo += t.getValor();
+            series.addOrUpdate(new Day(t.getData().getDayOfMonth(), t.getData().getMonthValue(), t.getData().getYear()), saldoCumulativo);
         }
+	    
         TimeSeriesCollection dataset = new TimeSeriesCollection();
         dataset.addSeries(series);
+
         JFreeChart chart = ChartFactory.createTimeSeriesChart("Evolução do Saldo", "Data", "Saldo (R$)", dataset, false, true, false);
         XYPlot plot = chart.getXYPlot();
         NumberAxis yAxis = (NumberAxis) plot.getRangeAxis();
         DateAxis xAxis = (DateAxis) plot.getDomainAxis();
-        NumberFormat formatador = NumberFormat.getNumberInstance();
-        formatador.setGroupingUsed(false);
-        yAxis.setNumberFormatOverride(formatador);
+        
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
+        yAxis.setNumberFormatOverride(currencyFormat);
         xAxis.setDateFormatOverride(new SimpleDateFormat("dd/MM"));
-        if (contaDoUsuario.getTransacoes().isEmpty()) {
+
+        if (transacoesValidas.isEmpty()) {
             yAxis.setRange(0.0, 1000.0);
-        } else if (contaDoUsuario.getTransacoes().size() == 1) {
-            double valorUnico = contaDoUsuario.getTransacoes().get(0).getValor();
+        } else if (transacoesValidas.size() == 1) {
+            double valorUnico = transacoesValidas.get(0).getValor();
             yAxis.setRange(0.0, Math.max(100.0, valorUnico * 1.5));
         }
+
         plot.clearRangeMarkers();
         if (metaSelecionada != null) {
             ValueMarker marker = new ValueMarker(metaSelecionada.getValorAlvo());
             marker.setPaint(Color.GREEN);
-            marker.setLabel(String.format("Meta: %s (R$ %d)", metaSelecionada.getNome(), metaSelecionada.getValorAlvo()));
+            marker.setLabel(String.format("Meta: %s (%s)", metaSelecionada.getNome(), currencyFormat.format(metaSelecionada.getValorAlvo())));
             marker.setLabelFont(new Font("SansSerif", Font.BOLD, 12));
             marker.setLabelAnchor(RectangleAnchor.TOP);
             plot.addRangeMarker(marker);
@@ -535,10 +536,25 @@ public class DashboardInterface extends JFrame {
                 yAxis.setLowerBound(Math.max(0.0, metaSelecionada.getValorAlvo() * 0.6));
             }
         }
+
         ChartPanel chartPanel = new ChartPanel(chart);
         graficoPanel.add(chartPanel);
         graficoPanel.revalidate();
         graficoPanel.repaint();
     }
- 	   
- }
+    
+    private void carregarFotoPerfil() {
+        try {
+            ImageIcon icon = userController.selecionaImagemController(); 
+            if (icon != null) {
+                Image img = icon.getImage().getScaledInstance(
+                    profilePhotoPanel.getWidth(),
+                    profilePhotoPanel.getHeight(),
+                    Image.SCALE_SMOOTH);
+                profilePhotoPanel.setImage(img);
+                profilePhotoPanel.repaint();
+            }
+        } catch (Exception ex){
+        }
+    }
+}
