@@ -247,14 +247,8 @@ public class DashboardInterface extends JFrame {
         }
     });
 	perfilBtn.setFont(new Font("Tahoma", Font.PLAIN, 14));
-	perfilBtn.setBounds(7, 10, 85, 21);
+	perfilBtn.setBounds(10, 202, 85, 21);
 	functionsDashboardPanel.add(perfilBtn);
-		
-	JButton desconectarBtn = new JButton("Desconectar");
-	desconectarBtn.setMargin(new Insets(2, 2, 2, 2));
-	desconectarBtn.setFont(new Font("Tahoma", Font.PLAIN, 13));
-	desconectarBtn.setBounds(7, 202, 85, 21);
-	functionsDashboardPanel.add(desconectarBtn);
 	
 	JPanel bemVindoPanel = new JPanel();
 	bemVindoPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -263,9 +257,14 @@ public class DashboardInterface extends JFrame {
 	bemVindoPanel.setLayout(null);
 		
 	JLabel bemVindoLabel = new JLabel("Olá! Bem-vindo ao");
-	bemVindoLabel.setFont(new Font("Dialog", Font.BOLD, 20));
-	bemVindoLabel.setBounds(10, 10, 184, 19);
+	bemVindoLabel.setFont(new Font("Dialog", Font.BOLD, 26));
+	bemVindoLabel.setBounds(69, 10, 254, 37);
 	bemVindoPanel.add(bemVindoLabel);
+	
+	JLabel lblJuliusFinances = new JLabel("Julius Finance's");
+	lblJuliusFinances.setFont(new Font("Dialog", Font.BOLD, 26));
+	lblJuliusFinances.setBounds(123, 57, 214, 33);
+	bemVindoPanel.add(lblJuliusFinances);
 		
 	JPanel saldoAtualPanel = new JPanel();
 	saldoAtualPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
