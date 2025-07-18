@@ -32,9 +32,7 @@ public class TransacaoController {
         String dataString=transacao.getData().toString();
         
         accountRepository.inserirTransacao(transacao, dataString, userController.getUserInstance().getEmail());
-        // *** PONTO DE PERSISTÊNCIA ***
-        // Chamar seu TransactionRepository para salvar esta transação no DB.
-        // Ex: transactionRepository.save(transaction, this.account.getId());
+
     }
     
     public List<Transacao> getAllTransacoes(String email){
@@ -58,11 +56,6 @@ public class TransacaoController {
         return transacoes;
     }
     
-    /**
-     * Remove uma transação da conta gerenciada.
-     * @param transaction A Transacao a ser removida.
-     * @throws BusinessException Se a transação for nula ou não encontrada na conta.
-     */
     public void removeTransacao(Transacao transaction) {
         if (transaction == null) {
             throw new BusinessException("Transação não pode ser nula para remoção.");
@@ -70,9 +63,6 @@ public class TransacaoController {
         if (!this.account.getTransacoes().remove(transaction)) {
             throw new BusinessException("Transação não encontrada na conta para remoção.");
         }
-        // *** PONTO DE PERSISTÊNCIA ***
-        // Chamar seu TransactionRepository para remover esta transação do DB.
-        // Ex: transactionRepository.delete(transaction.getId());
     }
 
     public double calculateCurrentBalance() {

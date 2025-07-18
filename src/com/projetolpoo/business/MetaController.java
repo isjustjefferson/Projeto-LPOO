@@ -3,14 +3,11 @@ package com.projetolpoo.business;
 import com.projetolpoo.database.AccountRepository;
 import java.util.List;
 
-import com.projetolpoo.entities.Account;
 import com.projetolpoo.entities.Meta;
 import com.projetolpoo.exception.BusinessException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class MetaController extends AccountController{
 
@@ -32,22 +29,13 @@ public class MetaController extends AccountController{
         
         accountRepository.inserirMeta(meta, userController.getUserInstance().getEmail());
         
-        //this.account.adicionarMeta(meta); // Adiciona a meta na lista da Account
-        // *** PONTO DE PERSISTÊNCIA ***
-        // Chamar seu MetaRepository para salvar esta meta no DB.
-        // Ex: metaRepository.save(meta, this.account.getId());
     }
     
     public void removeMeta(Meta meta) {
         if (meta == null) {
             throw new BusinessException("A meta não pode ser nula para remoção.");
         }
-        /*if (!this.account.getMetas().remove(meta)) { // Remove diretamente da lista de metas da Account
-            throw new BusinessException("Meta não encontrada na conta para remoção.");
-        }*/
-        // *** PONTO DE PERSISTÊNCIA ***
-        // Chamar seu MetaRepository para remover esta meta do DB.
-        // Ex: metaRepository.delete(meta.getId());
+
         AccountRepository accountRepository = new AccountRepository();
         accountRepository.deletarMeta(meta);
         AccountController.getAccountInstance().getMetas().remove(meta);

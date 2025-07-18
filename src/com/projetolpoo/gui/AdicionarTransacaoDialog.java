@@ -13,8 +13,6 @@ import javax.swing.border.EmptyBorder;
 import com.projetolpoo.entities.Account;
 import com.projetolpoo.entities.Transacao;
 import java.time.LocalDate;
-import com.projetolpoo.gui.DashboardInterface;
-import java.awt.Dimension;
 
 public class AdicionarTransacaoDialog extends JDialog {
 

@@ -17,37 +17,26 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.time.Day;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
-import java.awt.BorderLayout;
-import java.time.LocalDate;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 import java.awt.Font;
 import java.awt.GridLayout;
-
-import javax.swing.JTextField;
 import javax.swing.JLabel;
 import java.awt.Dimension;
 import java.awt.Insets;
-import java.awt.Component;
-import javax.swing.JToggleButton;
 import java.awt.Rectangle;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.swing.JRadioButton;
-import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
 import com.projetolpoo.entities.Account;
 import com.projetolpoo.entities.Meta;
 import com.projetolpoo.entities.Transacao;
-import com.projetolpoo.entities.User;
 import java.awt.Color;
-import javax.swing.JSlider;
 import javax.swing.JComboBox;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.JTextArea;
 import java.awt.Cursor;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
@@ -55,7 +44,6 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.axis.NumberAxis;
-import org.jfree.ui.TextAnchor;
 
 public class DashboardInterface extends JFrame {
 

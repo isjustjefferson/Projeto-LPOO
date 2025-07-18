@@ -1,6 +1,5 @@
 package com.projetolpoo.entities;
 import com.projetolpoo.service.EmailService;
-import javax.swing.ImageIcon;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class User {
@@ -54,11 +53,5 @@ public class User {
     public void setImagem(byte[] imagem) {
         this.imagem = imagem;
     }
-    
-    private static class getEmail {
-
-        public getEmail() {
-        }
-    }
-    
+        
 }

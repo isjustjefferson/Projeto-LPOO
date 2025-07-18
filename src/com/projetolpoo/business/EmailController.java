@@ -2,9 +2,11 @@ package com.projetolpoo.business;
 
 import com.projetolpoo.database.UserRepository;
 import com.projetolpoo.exception.BusinessException;
+
 import java.util.Random;
+
 import com.projetolpoo.service.EmailService;
-import java.time.Duration;
+
 import java.time.LocalDateTime;
 
 public class EmailController {

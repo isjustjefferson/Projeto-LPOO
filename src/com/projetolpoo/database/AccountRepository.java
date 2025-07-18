@@ -1,9 +1,7 @@
 package com.projetolpoo.database;
 
-import com.projetolpoo.entities.Account;
 import com.projetolpoo.entities.Meta;
 import com.projetolpoo.entities.Transacao;
-import com.projetolpoo.entities.User;
 import com.projetolpoo.exception.SystemException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;

@@ -5,7 +5,6 @@ import com.projetolpoo.entities.User;
 import com.projetolpoo.exception.BusinessException;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.sql.ResultSet;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
