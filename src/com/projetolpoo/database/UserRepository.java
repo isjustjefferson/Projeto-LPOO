@@ -36,12 +36,12 @@ public class UserRepository extends DataBaseConnection implements Repository<Use
         }
     }
     
-    public boolean login(User user){
+    public boolean login(String email, String senha){
         try{
             Connection conn = connect();
             PreparedStatement stmt = conn.prepareStatement("SELECT email, senha FROM user WHERE email = ? AND senha = ?");
-            stmt.setString(1, user.getEmail());
-            stmt.setString(2, user.getSenha());
+            stmt.setString(1, email);
+            stmt.setString(2, senha);
             ResultSet result = stmt.executeQuery();
             return result.next();
         } catch (Exception e){
@@ -60,59 +60,4 @@ public class UserRepository extends DataBaseConnection implements Repository<Use
             throw new SystemException("Erro no sistema",e);
         }
     }
-    
-    public void insereImagem(byte[] imagemBytes, String email){
-        try{
-            Connection conn = connect();
-            PreparedStatement stmt = conn.prepareStatement("UPDATE user SET imagem = ? WHERE email = ?");
-            stmt.setBytes(1, imagemBytes);
-            stmt.setString(2, email);
-
-            stmt.executeUpdate();
-            stmt.close();
-
-        } catch (Exception e){
-            throw new SystemException("Erro no sistema", e);
-        }
-    }
-    
-    public byte[] selecionaImagemRepository(User user){
-        try {
-            Connection conn = connect();
-            PreparedStatement stmt = conn.prepareStatement("SELECT imagem FROM user WHERE email = ?");
-            stmt.setString(1, user.getEmail());
-
-        try (ResultSet result = stmt.executeQuery()) {
-            if (result.next()) {
-                byte[] imagemBytes = result.getBytes("imagem");
-                if (imagemBytes != null) {
-                    return imagemBytes;
-                }
-            }
-        }
-
-        } catch (Exception e) {
-            throw new SystemException("Erro ao selecionar imagem!", e);
-        }
-
-        return null;
-    }
-    
-    public ResultSet instanciaUserRepository(String email){
-        ResultSet result = null;
-        try{
-            Connection conn = connect();
-            PreparedStatement stmt = conn.prepareStatement("SELECT nome, email, senha FROM user WHERE email=?");
-            stmt.setString(1, email);
-            
-            result = stmt.executeQuery();
-            if (result.next()){
-                return result;
-            }
-        }catch (Exception e){
-            throw new SystemException("Erro no sistema", e);
-        }
-        return result;
-    }
 }
-        

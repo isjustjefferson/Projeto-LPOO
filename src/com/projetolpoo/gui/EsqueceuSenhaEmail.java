@@ -2,6 +2,8 @@ package com.projetolpoo.gui;
 
 import com.projetolpoo.business.EmailController;
 import com.projetolpoo.business.UserController;
+import com.projetolpoo.database.Repository;
+import com.projetolpoo.database.UserRepository;
 import com.projetolpoo.exception.BusinessException;
 import com.projetolpoo.exception.EmailException;
 import com.projetolpoo.exception.SystemException;
@@ -19,7 +21,7 @@ import java.awt.GridLayout;
 public class EsqueceuSenhaEmail extends JFrame {
     private static final long serialVersionUID = 1L;
     private JTextField emailField;
-    
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             EsqueceuSenhaEmail frame = new EsqueceuSenhaEmail();
@@ -100,7 +102,8 @@ public class EsqueceuSenhaEmail extends JFrame {
 
                 try{
                     String email = emailField.getText().trim();
-                    EmailController.getInstance().enviaEmailRecuperacao(email);
+                    EmailController emailController = new EmailController();
+                    emailController.enviaEmailRecuperacao(email);
                 
                     String codigoInserido = JOptionPane.showInputDialog(
                         EsqueceuSenhaEmail.this,
@@ -108,8 +111,8 @@ public class EsqueceuSenhaEmail extends JFrame {
                         "Verificação de Código",
                         JOptionPane.PLAIN_MESSAGE
                     );
-                    
-                    if (EmailController.getInstance().confirmaCodigo(codigoInserido)){
+                                        
+                    if (emailController.confirmaCodigo(codigoInserido)){
                         mostrarDialogoNovaSenha(email);
                     }
                 } catch (EmailException | BusinessException | SystemException ee){

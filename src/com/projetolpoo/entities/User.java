@@ -1,14 +1,11 @@
 package com.projetolpoo.entities;
 import com.projetolpoo.service.EmailService;
-import javax.swing.ImageIcon;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class User {
-    
     private String nome;
     private String email;
     private String senha;
-    private byte[] imagem;
     
     @Autowired
     private EmailService emailService;
@@ -22,7 +19,7 @@ public class User {
             emailService.enviarEmail(email, "Teste", "Teste");
         }
     }
-    
+
     public String getNome() {
         return nome;
     }
@@ -46,15 +43,7 @@ public class User {
     public void setSenha(String senha) {
         this.senha = senha;
     }
-    
-    public byte[] getImagem() {
-        return imagem;
-    }
 
-    public void setImagem(byte[] imagem) {
-        this.imagem = imagem;
-    }
-    
     private static class getEmail {
 
         public getEmail() {

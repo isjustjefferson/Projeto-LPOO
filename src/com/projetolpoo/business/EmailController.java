@@ -15,16 +15,10 @@ public class EmailController {
     private String email;
     private LocalDateTime horaEnvio;
     
-    private EmailController(){
+    public EmailController(){
         this.emailService = new EmailService();
     }
-    
-    public static EmailController getInstance(){
-        if (instance == null){
-            instance = new EmailController();
-        }
-        return instance;
-    }
+
     
     public String gerarCodigo(){
         String caracteres="abcdefghijqlmnopqrstuvwxyz0123456789";
