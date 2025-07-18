@@ -1,16 +1,14 @@
 package com.projetolpoo.business;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.sql.ResultSet;
-
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-
 import com.projetolpoo.database.Repository;
 import com.projetolpoo.database.UserRepository;
 import com.projetolpoo.entities.User;
 import com.projetolpoo.exception.BusinessException;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.sql.ResultSet;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 public class UserController {
     
@@ -156,7 +154,11 @@ public class UserController {
         }
     }
 
-    private User getUserInstance() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public User getUserInstance() {
+        return userInstance;
+    }
+
+    public void setUserInstance(User userInstance) {
+        UserController.userInstance = userInstance;
     }
 }
