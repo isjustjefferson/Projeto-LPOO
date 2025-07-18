@@ -4,8 +4,15 @@ import com.projetolpoo.database.Repository;
 import com.projetolpoo.database.UserRepository;
 import com.projetolpoo.entities.User;
 import com.projetolpoo.exception.BusinessException;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.sql.ResultSet;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 public class UserController {
+    
+    private static User userInstance;
     
     public void registraUsuario(String nome, String email, String senha, String confirmacaoSenha){
         
@@ -32,8 +39,8 @@ public class UserController {
         if (!senha.equals(confirmacaoSenha)){
             throw new BusinessException("A senha precisa ser igual a confirmação.");
         }
-   
-        User user = new User (nome, email, senha);
+        
+        User user = new User(nome, email, senha);
         Repository repository = new UserRepository();
         boolean existe = repository.confirm(email);
         
@@ -54,10 +61,12 @@ public class UserController {
             throw new BusinessException("Os campos não podem estar vazios.");
         }
         
+        instanciaUserController(email);
         UserRepository repository = new UserRepository();
-        boolean exists = repository.login(email, senha);
+        boolean exists = repository.login(getUserInstance());
         
         if (!exists){
+            userInstance = null;
             throw new BusinessException ("Usuário não encontrado.");
         }
     }
@@ -86,5 +95,70 @@ public class UserController {
         
         UserRepository userRepository = new UserRepository();
         userRepository.trocaSenhaRepository(email, novaSenha);
+    }
+    
+    public byte[] imageIconToBytes(ImageIcon icon, String format) throws Exception {
+        BufferedImage bufferedImage = new BufferedImage(
+            icon.getIconWidth(),
+            icon.getIconHeight(),
+            BufferedImage.TYPE_INT_ARGB
+        );
+        bufferedImage.getGraphics().drawImage(icon.getImage(), 0, 0, null);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(bufferedImage, format, baos);
+        return baos.toByteArray();
+    }
+    
+    public void registraImagem(ImageIcon imagem){
+        if (userInstance == null) {
+            throw new BusinessException("Nenhum usuário logado. Não é possível salvar a imagem.");
+        }
+        try {
+            byte[] imagemBytes=imageIconToBytes(imagem, "jpg");
+            
+            UserRepository userRepository = new UserRepository();
+            userRepository.insereImagem(imagemBytes, userInstance.getEmail()); 
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new BusinessException("Não foi possível registrar a imagem.");
+        }
+    }
+    
+    public ImageIcon selecionaImagemController(){
+        if (userInstance == null) {
+            return null;
+        }
+        try{
+            UserRepository userRepository = new UserRepository();
+            byte[] imagemBytes = userRepository.selecionaImagemRepository(userInstance);
+            if (imagemBytes == null || imagemBytes.length == 0) {
+                return null;
+            }
+            ImageIcon imagem = new ImageIcon(imagemBytes); 
+            return imagem;
+        }catch (Exception e){
+            throw new BusinessException("Não foi possível selecionar a imagem.");
+        }
+    }
+
+    public void instanciaUserController(String email) {
+        try{
+            UserRepository userRepository = new UserRepository();
+            ResultSet result = userRepository.instanciaUserRepository(email);
+            if(result.next()) {
+                userInstance = new User(result.getString("nome"),result.getString("email"),result.getString("senha"));
+            }
+        }catch (Exception e){
+            throw new BusinessException("Não foi possível conectar a sua conta.");
+        }
+    }
+
+    public User getUserInstance() {
+        return userInstance;
+    }
+
+    public void setUserInstance(User userInstance) {
+        UserController.userInstance = userInstance;
     }
 }

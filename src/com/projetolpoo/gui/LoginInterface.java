@@ -141,26 +141,18 @@ public class LoginInterface extends JFrame {
                 char[] senhaChars = passwordLoginField.getPassword();
                 String senha = new String(senhaChars);
 
-                if(email.isEmpty() || senha.isEmpty()) {
-                    JOptionPane.showMessageDialog(LoginInterface.this, 
-                        "Por favor, preencha todos os campos!", "Erro", JOptionPane.ERROR_MESSAGE);
-                    Arrays.fill(senhaChars, ' ');
-                    return;
-                }
-
                 try {
-                    UserController controller = new UserController();
-                    controller.confirmaUsuario(email, senha);
+                    UserController userController = new UserController();
+                    userController.confirmaUsuario(email, senha);
                     
                     JOptionPane.showMessageDialog(LoginInterface.this, 
                         "Login realizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                    DashboardInterface dashboardFrame = new DashboardInterface();
+                    dashboardFrame.setVisible(true);
                     dispose();
-                } catch (BusinessException be) {
+                } catch (BusinessException | SystemException ee) {
                     JOptionPane.showMessageDialog(LoginInterface.this, 
-                        be.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-                } catch (SystemException se) {
-                    JOptionPane.showMessageDialog(LoginInterface.this, 
-                        se.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                        ee.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
                 } finally {
                     Arrays.fill(senhaChars, ' ');
                 }

@@ -10,14 +10,16 @@ public class Transacao implements Serializable {
     private String descricao; //Descreve o que é a transação. Ex: "Salário", "Aluguel"....
     private double valor; // é o valor, Se for positivo será Receita, se for nagativo será DESPESA. 
     private LocalDate data; // Guarda a Data de entrada do valor.
+    private boolean isFixo;
 
     public Transacao() {
     }
 
-    public Transacao(String descricao, double valor, LocalDate data) {
+    public Transacao(String descricao, double valor, LocalDate data, boolean isFixo) {
         this.descricao = descricao;
         this.valor = valor;
         this.data = data;
+        this.isFixo = isFixo;
     }
 
     public String getDescricao() {
@@ -43,4 +45,8 @@ public class Transacao implements Serializable {
     public void setData(LocalDate data) {
         this.data = data;
     }
+
+	public boolean isFixo() {
+		return this.isFixo;
+	}
 }
