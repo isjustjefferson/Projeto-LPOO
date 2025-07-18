@@ -13,6 +13,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import com.projetolpoo.business.UserController;
+import com.projetolpoo.exception.BusinessException;
+import com.projetolpoo.exception.SystemException;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -25,9 +27,9 @@ public class PerfilConfigDialog extends JDialog {
 
     private static final long serialVersionUID = 1L;
     private final JPanel contentPanel = new JPanel();
-    private JTextField nomeField;
     private JTextField emailField;
-    private JPasswordField novaSenhaField;
+    private JTextField novaSenhaField;
+    private JPasswordField confirmaNovaSenhaField;
     private RoundPanel fotoPanel;
     private UserController userController;
     private ImageIcon novaFotoIcon = null;
@@ -62,34 +64,33 @@ public class PerfilConfigDialog extends JDialog {
         alterarFotoBtn.setBounds(190, 170, 110, 25);
         contentPanel.add(alterarFotoBtn);
 
-        JLabel nomeLabel = new JLabel("Email:");
-        nomeLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
-        nomeLabel.setBounds(85, 219, 55, 25);
-        contentPanel.add(nomeLabel);
-
-        nomeField = new JTextField();
-        nomeField.setBounds(147, 220, 273, 25);
-        contentPanel.add(nomeField);
-        nomeField.setColumns(10);
-
-        JLabel emailLabel = new JLabel("Nova Senha:");
+        JLabel emailLabel = new JLabel("Email:");
         emailLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
-        emailLabel.setBounds(60, 254, 80, 25);
+        emailLabel.setBounds(85, 219, 55, 25);
         contentPanel.add(emailLabel);
 
         emailField = new JTextField();
-        emailField.setColumns(10);
-        emailField.setBounds(147, 255, 273, 25);
+        emailField.setBounds(147, 220, 273, 25);
         contentPanel.add(emailField);
+        emailField.setColumns(10);
 
-        JLabel novaSenhaLabel = new JLabel("Confirmação de Senha:");
+        JLabel novaSenhaLabel = new JLabel("Nova Senha:");
         novaSenhaLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
-        novaSenhaLabel.setBounds(10, 290, 140, 25);
+        novaSenhaLabel.setBounds(60, 254, 80, 25);
         contentPanel.add(novaSenhaLabel);
-        
-        novaSenhaField = new JPasswordField();
-        novaSenhaField.setBounds(147, 290, 273, 25);
+
+        novaSenhaField = new JTextField();
+        novaSenhaField.setColumns(10);
+        novaSenhaField.setBounds(147, 255, 273, 25);
         contentPanel.add(novaSenhaField);
+
+        JLabel confirmaNovaSenhaLabel = new JLabel("Confirmação de Senha:");
+        confirmaNovaSenhaLabel.setBounds(10, 290, 140, 25);
+        contentPanel.add(confirmaNovaSenhaLabel);
+        
+        confirmaNovaSenhaField = new JPasswordField();
+        confirmaNovaSenhaField.setBounds(147, 290, 273, 25);
+        contentPanel.add(confirmaNovaSenhaField);
 
         JButton salvarBtn = new JButton("Salvar Alterações");
         salvarBtn.addActionListener(e -> onSalvar());
@@ -137,8 +138,14 @@ public class PerfilConfigDialog extends JDialog {
             userController.registraImagem(this.novaFotoIcon);
         }
         
-        // Aqui você adicionaria a lógica para salvar nome, email e senha
-        // Ex: userController.atualizarDados(nomeField.getText(), emailField.getText(), new String(novaSenhaField.getPassword()));
+        try{
+            userController.trocaSenhaController(emailField.getText(), novaSenhaField.getText(), confirmaNovaSenhaField.getText());
+        }catch(BusinessException | SystemException e){
+            JOptionPane.showMessageDialog(this,
+                e.getMessage(),
+                "Erro",
+                JOptionPane.ERROR_MESSAGE);
+        }
         
         JOptionPane.showMessageDialog(this, "Alterações salvas com sucesso!");
         dispose();

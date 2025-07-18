@@ -63,10 +63,9 @@ public class UserController {
         
         instanciaUserController(email);
         UserRepository repository = new UserRepository();
-        boolean exists = repository.login(getUserInstance());
+        boolean exists = repository.login(userInstance);
         
         if (!exists){
-            userInstance = null;
             throw new BusinessException ("Usuário não encontrado.");
         }
     }
@@ -145,11 +144,9 @@ public class UserController {
     public void instanciaUserController(String email) {
         try{
             UserRepository userRepository = new UserRepository();
-            ResultSet result = userRepository.instanciaUserRepository(email);
-            if(result.next()) {
-                userInstance = new User(result.getString("nome"),result.getString("email"),result.getString("senha"));
-            }
+            userRepository.instanciaUserRepository(email);
         }catch (Exception e){
+            e.printStackTrace();
             throw new BusinessException("Não foi possível conectar a sua conta.");
         }
     }

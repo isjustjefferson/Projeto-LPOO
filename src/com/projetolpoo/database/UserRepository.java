@@ -1,5 +1,6 @@
 package com.projetolpoo.database;
 
+import com.projetolpoo.business.UserController;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -53,11 +54,13 @@ public class UserRepository extends DataBaseConnection implements Repository<Use
         try{
             Connection conn = connect();
             PreparedStatement stmt = conn.prepareStatement("UPDATE user SET senha = ? WHERE email = ?");
+            //stmt.execute("PRAGMA journal_mode=WAL;");
             stmt.setString(1, novaSenha);
             stmt.setString(2, email);
             stmt.execute();
         } catch (Exception e){
-            throw new SystemException("Erro no sistema",e);
+            e.printStackTrace();
+            //throw new SystemException("Erro no sistema",e);
         }
     }
     
@@ -98,7 +101,7 @@ public class UserRepository extends DataBaseConnection implements Repository<Use
         return null;
     }
     
-    public ResultSet instanciaUserRepository(String email){
+    public void instanciaUserRepository(String email){
         ResultSet result = null;
         try{
             Connection conn = connect();
@@ -107,12 +110,13 @@ public class UserRepository extends DataBaseConnection implements Repository<Use
             
             result = stmt.executeQuery();
             if (result.next()){
-                return result;
+                UserController userController = new UserController();
+                User user = new User(result.getString("nome"), result.getString("email"), result.getString("senha"));
+                userController.setUserInstance(user);
             }
         }catch (Exception e){
             throw new SystemException("Erro no sistema", e);
         }
-        return result;
     }
 }
         
