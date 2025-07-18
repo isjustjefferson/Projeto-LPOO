@@ -10,14 +10,12 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.Arrays;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import com.projetolpoo.business.UserController;
@@ -32,7 +30,6 @@ public class LoginInterface extends JFrame {
     private static JPanel contentPane;
     private JTextField usernameLoginField;
     private JPasswordField passwordLoginField;
-    private JCheckBox manterConectadoCheckBox;
 	private ImageIcon olhoAbertoIcon;
 	private ImageIcon olhoFechadoIcon;
 
@@ -70,9 +67,22 @@ public class LoginInterface extends JFrame {
         loginPanel.setLayout(null);
         contentPane.add(loginPanel);
         
+        JLabel juliusLabel = new JLabel("");
+        juliusLabel.setIcon(new ImageIcon(LoginInterface.class.getResource("/imagens/julius_principal.png")));
+        juliusLabel.setBounds(0, 0, 658, 695);
+        contentPane.add(juliusLabel);
+        
+        JLabel emailLabel = new JLabel("E-mail");
+        emailLabel.setBounds(91, 263, 45, 13);
+        loginPanel.add(emailLabel);
+        
+        JLabel senhaLabel = new JLabel("Senha");
+        senhaLabel.setBounds(91, 322, 45, 13);
+        loginPanel.add(senhaLabel);
+        
         usernameLoginField = new JTextField("Digite seu email");
         usernameLoginField.setForeground(Color.GRAY);
-        usernameLoginField.setBounds(91, 271, 200, 30);
+        usernameLoginField.setBounds(91, 282, 200, 30);
         loginPanel.add(usernameLoginField);
 
         usernameLoginField.addFocusListener(new FocusAdapter() {
@@ -123,12 +133,6 @@ public class LoginInterface extends JFrame {
             }
         });
         
-        manterConectadoCheckBox = new JCheckBox("Continuar conectado");
-        manterConectadoCheckBox.setBounds(111, 394, 136, 20);
-        manterConectadoCheckBox.setBackground(Color.WHITE);
-        manterConectadoCheckBox.setFont(new Font("Dialog", Font.PLAIN, 11));
-        loginPanel.add(manterConectadoCheckBox);
-        
         JButton confirmarLoginBtn = new JButton("");
         confirmarLoginBtn.setIcon(new ImageIcon(LoginInterface.class.getResource("/imagens/BotãoDeLogin.png")));
         confirmarLoginBtn.addActionListener(new ActionListener() {
@@ -136,7 +140,6 @@ public class LoginInterface extends JFrame {
                 String email = usernameLoginField.getText();
                 char[] senhaChars = passwordLoginField.getPassword();
                 String senha = new String(senhaChars);
-                boolean manterConectado = manterConectadoCheckBox.isSelected();
 
                 if(email.isEmpty() || senha.isEmpty()) {
                     JOptionPane.showMessageDialog(LoginInterface.this, 
@@ -148,9 +151,6 @@ public class LoginInterface extends JFrame {
                 try {
                     UserController controller = new UserController();
                     controller.confirmaUsuario(email, senha);
-                    
-                    if(manterConectado) {
-                    }
                     
                     JOptionPane.showMessageDialog(LoginInterface.this, 
                         "Login realizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
@@ -168,13 +168,13 @@ public class LoginInterface extends JFrame {
         });
         confirmarLoginBtn.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
         confirmarLoginBtn.setMargin(new Insets(2, 2, 2, 2));
-        confirmarLoginBtn.setBounds(116, 433, 140, 35);
+        confirmarLoginBtn.setBounds(123, 404, 140, 35);
         confirmarLoginBtn.setBackground(new Color(70, 70, 70));
         confirmarLoginBtn.setForeground(Color.WHITE);
         loginPanel.add(confirmarLoginBtn);
         
         JButton recuperarSenhaBtn = new JButton("Esqueceu a senha?");
-        recuperarSenhaBtn.setBounds(107, 478, 156, 20);
+        recuperarSenhaBtn.setBounds(123, 478, 140, 20);
         recuperarSenhaBtn.setBorderPainted(false);
         recuperarSenhaBtn.setContentAreaFilled(false);
         recuperarSenhaBtn.setForeground(new Color(0, 100, 200));
@@ -201,32 +201,28 @@ public class LoginInterface extends JFrame {
         cadastrarBtn.setForeground(new Color(0, 100, 200));
         cadastrarBtn.setContentAreaFilled(false);
         cadastrarBtn.setBorderPainted(false);
-        cadastrarBtn.setBounds(86, 539, 194, 24);
+        cadastrarBtn.setBounds(127, 535, 136, 24);
         loginPanel.add(cadastrarBtn);
         
-        JLabel iconeLabel_1 = new JLabel("");
-        iconeLabel_1.setIcon(new ImageIcon(LoginInterface.class.getResource("/imagens/BonecoGrande.png")));
-        iconeLabel_1.setBounds(141, 161, 74, 81);
-        loginPanel.add(iconeLabel_1);
+        JLabel iconeLabel = new JLabel("");
+        iconeLabel.setIcon(new ImageIcon(LoginInterface.class.getResource("/imagens/BonecoGrande.png")));
+        iconeLabel.setBounds(147, 162, 74, 81);
+        loginPanel.add(iconeLabel);
         
         JLabel bemVindoLabel = new JLabel("");
         bemVindoLabel.setIcon(new ImageIcon(LoginInterface.class.getResource("/imagens/Title.png")));
-        bemVindoLabel.setBounds(91, 66, 223, 63);
+        bemVindoLabel.setBounds(86, 59, 195, 89);
         loginPanel.add(bemVindoLabel);
         
-        JLabel label = new JLabel("New label");
-        label.setBounds(111, 161, -42, 6);
-        loginPanel.add(label);
-        
-        JLabel lblNewLabel_3 = new JLabel("Ou");
-        lblNewLabel_3.setBounds(180, 508, 20, 20);
-        loginPanel.add(lblNewLabel_3);
+        JLabel ouLabel = new JLabel("Ou");
+        ouLabel.setBounds(188, 508, 20, 20);
+        loginPanel.add(ouLabel);
         
         olhoAbertoIcon = new ImageIcon(getClass().getResource("/imagens/olhoAberto.png"));
         olhoFechadoIcon = new ImageIcon(getClass().getResource("/imagens/olhoFechado.png"));
         
         JToggleButton verSenhaToggleButton = new JToggleButton(olhoFechadoIcon);
-        verSenhaToggleButton.setBounds(301, 351, 15, 15);
+        verSenhaToggleButton.setBounds(301, 346, 20, 20);
         verSenhaToggleButton.setBorderPainted(false);
         verSenhaToggleButton.setContentAreaFilled(false);
         verSenhaToggleButton.setSelected(false);
@@ -239,12 +235,9 @@ public class LoginInterface extends JFrame {
             } else {
                 passwordLoginField.setEchoChar('•');
                 verSenhaToggleButton.setIcon(olhoFechadoIcon);
+               
             }
         });
         
-        JLabel juliusLabel = new JLabel("");
-        juliusLabel.setIcon(new ImageIcon(LoginInterface.class.getResource("/imagens/julius_principal.png")));
-        juliusLabel.setBounds(0, 0, 658, 695);
-        contentPane.add(juliusLabel);
     }
 }

@@ -9,10 +9,13 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.util.Arrays;
-
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -21,9 +24,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
-
 import com.projetolpoo.business.UserController;
 import com.projetolpoo.exception.BusinessException;
 import com.projetolpoo.exception.EmailException;
@@ -41,6 +44,8 @@ public class RegisterInterface extends JFrame {
     private JTextField confirmacaoEmailRegisterField;
     private JDialog verificationDialog;
     private JTextField verificationCodeField;
+    private ImageIcon olhoAbertoIcon;
+	private ImageIcon olhoFechadoIcon;
     private String tempNome;
     private String tempEmail;
     private String tempSenha;
@@ -53,7 +58,6 @@ public class RegisterInterface extends JFrame {
         }
         return instance;
     }
-    
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -87,6 +91,183 @@ public class RegisterInterface extends JFrame {
         registerPanel.setLayout(null);
         contentPane.add(registerPanel);
         
+        JLabel foco = new JLabel();
+        foco.setFocusable(true);
+        contentPane.add(foco);
+        
+        olhoAbertoIcon = new ImageIcon(getClass().getResource("/imagens/olhoAberto.png"));
+        olhoFechadoIcon = new ImageIcon(getClass().getResource("/imagens/olhoFechado.png"));
+        
+        JToggleButton verSenhaToggleButton = new JToggleButton(olhoFechadoIcon);
+        verSenhaToggleButton.setBounds(315, 341, 20, 30);
+        verSenhaToggleButton.setBorderPainted(false);
+        verSenhaToggleButton.setContentAreaFilled(false);
+        verSenhaToggleButton.setSelected(false);
+        registerPanel.add(verSenhaToggleButton);
+        
+        verSenhaToggleButton.addActionListener(e -> {
+            if (verSenhaToggleButton.isSelected()) {
+            	senhaRegisterField.setEchoChar((char) 0);
+                verSenhaToggleButton.setIcon(olhoAbertoIcon);
+            } else {
+            	senhaRegisterField.setEchoChar('•');
+                verSenhaToggleButton.setIcon(olhoFechadoIcon);
+               
+            }
+        });
+        
+        JToggleButton verSenhacToggleButton = new JToggleButton(olhoFechadoIcon);
+        verSenhacToggleButton.setBounds(315, 400, 20, 30);
+        verSenhacToggleButton.setBorderPainted(false);
+        verSenhacToggleButton.setContentAreaFilled(false);
+        verSenhacToggleButton.setSelected(false);
+        registerPanel.add(verSenhacToggleButton);
+        
+        verSenhacToggleButton.addActionListener(e -> {
+            if (verSenhacToggleButton.isSelected()) {
+            	confirmacaoSenhaRegisterField.setEchoChar((char) 0);
+                verSenhacToggleButton.setIcon(olhoAbertoIcon);
+            } else {
+            	confirmacaoSenhaRegisterField.setEchoChar('•');
+                verSenhacToggleButton.setIcon(olhoFechadoIcon);
+               
+            }
+        });
+        
+        nomeRegisterField = new JTextField("Digite seu nome");
+        nomeRegisterField.setForeground(Color.GRAY);
+        nomeRegisterField.setBounds(110, 160, 200, 30);
+        registerPanel.add(nomeRegisterField);
+
+        nomeRegisterField.addFocusListener(new FocusAdapter() {
+           
+            public void focusGained(FocusEvent e) {
+                if (nomeRegisterField.getText().equals("Digite seu nome")) {
+                	nomeRegisterField.setText("");
+                	nomeRegisterField.setForeground(Color.BLACK);
+                }
+            }
+
+            public void focusLost(FocusEvent e) {
+                if (nomeRegisterField.getText().isEmpty()) {
+                	nomeRegisterField.setForeground(Color.GRAY);
+                	nomeRegisterField.setText("Digite seu nome");
+                }
+            }
+        });
+        
+        emailRegisterField = new JTextField("Digite seu email");
+        emailRegisterField.setForeground(Color.GRAY);
+        emailRegisterField.setBounds(110, 224, 200, 30);
+        registerPanel.add(emailRegisterField);
+
+        emailRegisterField.addFocusListener(new FocusAdapter() {
+           
+            public void focusGained(FocusEvent e) {
+                if (emailRegisterField.getText().equals("Digite seu email")) {
+                	emailRegisterField.setText("");
+                	emailRegisterField.setForeground(Color.BLACK);
+                }
+            }
+
+            public void focusLost(FocusEvent e) {
+                if (emailRegisterField.getText().isEmpty()) {
+                	emailRegisterField.setForeground(Color.GRAY);
+                	emailRegisterField.setText("Digite seu email");
+                }
+            }
+        });
+        
+        confirmacaoEmailRegisterField = new JTextField("Digite seu email");
+        confirmacaoEmailRegisterField.setForeground(Color.GRAY);
+        confirmacaoEmailRegisterField.setBounds(110, 284, 200, 30);
+        registerPanel.add(confirmacaoEmailRegisterField);
+
+        confirmacaoEmailRegisterField.addFocusListener(new FocusAdapter() {
+           
+            public void focusGained(FocusEvent e) {
+                if (confirmacaoEmailRegisterField.getText().equals("Digite seu email")) {
+                	confirmacaoEmailRegisterField.setText("");
+                	confirmacaoEmailRegisterField.setForeground(Color.BLACK);
+                }
+            }
+
+            public void focusLost(FocusEvent e) {
+                if (confirmacaoEmailRegisterField.getText().isEmpty()) {
+                	confirmacaoEmailRegisterField.setForeground(Color.GRAY);
+                	confirmacaoEmailRegisterField.setText("Digite seu email");
+                }
+            }
+        });
+        
+        senhaRegisterField = new JPasswordField();
+        senhaRegisterField.setText("Digite sua senha");
+        senhaRegisterField.setForeground(Color.GRAY);
+        senhaRegisterField.setEchoChar((char) 0);
+        senhaRegisterField.setBounds(110, 284, 200, 30);
+        registerPanel.add(senhaRegisterField);
+
+        senhaRegisterField.setBounds(110, 341, 200, 30);
+        registerPanel.add(senhaRegisterField);
+
+        senhaRegisterField.addFocusListener(new FocusAdapter() {
+        
+            public void focusGained(FocusEvent e) {
+                String pwd = new String(senhaRegisterField.getPassword());
+                if (pwd.equals("Digite sua senha")) {
+                	senhaRegisterField.setText("");
+                	senhaRegisterField.setForeground(Color.BLACK);
+                	senhaRegisterField.setEchoChar('•');
+                }
+            }
+
+            public void focusLost(FocusEvent e) {
+                String pwd = new String(senhaRegisterField.getPassword());
+                if (pwd.isEmpty()) {
+                	senhaRegisterField.setText("Digite sua senha");
+                	senhaRegisterField.setForeground(Color.GRAY);
+                	senhaRegisterField.setEchoChar((char) 0);
+                }
+            }
+        });
+        
+        confirmacaoSenhaRegisterField = new JPasswordField();
+        confirmacaoSenhaRegisterField.setText("Digite sua senha");
+        confirmacaoSenhaRegisterField.setForeground(Color.GRAY);
+        confirmacaoSenhaRegisterField.setEchoChar((char) 0);
+        confirmacaoSenhaRegisterField.setBounds(110, 400, 200, 30);
+        registerPanel.add(confirmacaoSenhaRegisterField);
+
+        senhaRegisterField.setBounds(110, 341, 200, 30);
+        registerPanel.add(confirmacaoSenhaRegisterField);
+
+        confirmacaoSenhaRegisterField.addFocusListener(new FocusAdapter() {
+        
+            public void focusGained(FocusEvent e) {
+                String pwd = new String(confirmacaoSenhaRegisterField.getPassword());
+                if (pwd.equals("Digite sua senha")) {
+                	confirmacaoSenhaRegisterField.setText("");
+                	confirmacaoSenhaRegisterField.setForeground(Color.BLACK);
+                	confirmacaoSenhaRegisterField.setEchoChar('•');
+                }
+            }
+
+            public void focusLost(FocusEvent e) {
+                String pwd = new String(confirmacaoSenhaRegisterField.getPassword());
+                if (pwd.isEmpty()) {
+                	confirmacaoSenhaRegisterField.setText("Digite sua senha");
+                	confirmacaoSenhaRegisterField.setForeground(Color.GRAY);
+                	confirmacaoSenhaRegisterField.setEchoChar((char) 0);
+                }
+            }
+        });
+        
+        
+        JLabel juliusLabel = new JLabel("");
+        juliusLabel.setIcon(new ImageIcon(LoginInterface.class.getResource("/imagens/julius_principal.png")));
+        juliusLabel.setBounds(0, 0, 658, 695);
+        contentPane.add(juliusLabel);
+        
         JLabel registerLabel = new JLabel("CADASTRO");
         registerLabel.setBounds(140, 80, 140, 36);
         registerLabel.setForeground(Color.BLACK);
@@ -98,50 +279,32 @@ public class RegisterInterface extends JFrame {
         nomeLabel.setForeground(Color.BLACK);
         registerPanel.add(nomeLabel);
         
-        nomeRegisterField = new JTextField();
-        nomeRegisterField.setBounds(110, 160, 200, 30);
-        registerPanel.add(nomeRegisterField);
-        nomeRegisterField.setColumns(10);
-        
         JLabel emailLabel = new JLabel("E-mail");
         emailLabel.setBounds(110, 200, 80, 14);
         emailLabel.setForeground(Color.BLACK);
         registerPanel.add(emailLabel);
-        
-        emailRegisterField = new JTextField();
-        emailRegisterField.setBounds(110, 220, 200, 30);
-        registerPanel.add(emailRegisterField);
-        emailRegisterField.setColumns(10);
         
         JLabel confirmacaoEmailLabel = new JLabel("Confirmar E-mail");
         confirmacaoEmailLabel.setBounds(110, 260, 120, 14);
         confirmacaoEmailLabel.setForeground(Color.BLACK);
         registerPanel.add(confirmacaoEmailLabel);
         
-        confirmacaoEmailRegisterField = new JTextField();
-        confirmacaoEmailRegisterField.setBounds(110, 280, 200, 30);
-        registerPanel.add(confirmacaoEmailRegisterField);
-        confirmacaoEmailRegisterField.setColumns(10);
-        
         JLabel senhaLabel = new JLabel("Senha");
         senhaLabel.setBounds(110, 320, 80, 14);
         senhaLabel.setForeground(Color.BLACK);
         registerPanel.add(senhaLabel);
-        
-        senhaRegisterField = new JPasswordField();
-        senhaRegisterField.setBounds(110, 340, 200, 30);
-        registerPanel.add(senhaRegisterField);
         
         JLabel confirmarSenhaLabel = new JLabel("Confirmar Senha");
         confirmarSenhaLabel.setBounds(110, 380, 120, 14);
         confirmarSenhaLabel.setForeground(Color.BLACK);
         registerPanel.add(confirmarSenhaLabel);
         
-        confirmacaoSenhaRegisterField = new JPasswordField();
-        confirmacaoSenhaRegisterField.setBounds(110, 400, 200, 30);
-        registerPanel.add(confirmacaoSenhaRegisterField);
+        JLabel cadastrarLabel = new JLabel("");
+        cadastrarLabel.setIcon(new ImageIcon(RegisterInterface.class.getResource("/imagens/BotãoDeCadastro.png")));
+        cadastrarLabel.setBounds(140, 457, 140, 35);
+        registerPanel.add(cadastrarLabel);
         
-        JButton cadastrarBtn = new JButton("CADASTRAR");
+        JButton cadastrarBtn = new JButton("");
         cadastrarBtn.addActionListener(new ActionListener() {
         	
             public void actionPerformed(ActionEvent e) {
@@ -168,11 +331,13 @@ public class RegisterInterface extends JFrame {
                 }
             }
         });
-        cadastrarBtn.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
         cadastrarBtn.setMargin(new Insets(2, 2, 2, 2));
-        cadastrarBtn.setBounds(140, 460, 140, 35);
-        cadastrarBtn.setBackground(new Color(70, 70, 70));
-        cadastrarBtn.setForeground(Color.WHITE);
+        cadastrarBtn.setBounds(140, 457, 140, 35);
+        cadastrarBtn.setContentAreaFilled(false);  
+        cadastrarBtn.setBorderPainted(false);      
+        cadastrarBtn.setFocusPainted(false);       
+        cadastrarBtn.setText("");                 
+        cadastrarBtn.setIcon(null);                
         registerPanel.add(cadastrarBtn);
         
         JButton voltarBtn = new JButton("VOLTAR");
@@ -190,12 +355,13 @@ public class RegisterInterface extends JFrame {
         voltarBtn.setBorderPainted(false);
         voltarBtn.setBounds(160, 510, 100, 24);
         registerPanel.add(voltarBtn);
+        
     }
     
     private void showVerificationDialog(String email) {
         verificationDialog = new JDialog(this, "Verificação de Email", true);
         verificationDialog.setSize(350, 250); 
-        verificationDialog.setLayout(new BorderLayout());
+        verificationDialog.getContentPane().setLayout(new BorderLayout());
         verificationDialog.setLocationRelativeTo(this);
 
         JPanel mainPanel = new JPanel();
@@ -271,7 +437,9 @@ public class RegisterInterface extends JFrame {
 
         mainPanel.add(buttonPanel);
 
-        verificationDialog.add(mainPanel, BorderLayout.CENTER);
+        verificationDialog.getContentPane().add(mainPanel, BorderLayout.CENTER);
         verificationDialog.setVisible(true);
+       
+        
     }
 }

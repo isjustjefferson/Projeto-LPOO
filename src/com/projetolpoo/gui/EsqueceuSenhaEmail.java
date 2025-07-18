@@ -12,15 +12,11 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.Color;
-import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.GridLayout;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JPasswordField;
 
 public class EsqueceuSenhaEmail extends JFrame {
     private static final long serialVersionUID = 1L;
@@ -52,6 +48,15 @@ public class EsqueceuSenhaEmail extends JFrame {
         mainPanel.setLayout(null);
         contentPane.add(mainPanel);
         
+        JLabel juliusLabel = new JLabel("");
+        juliusLabel.setIcon(new ImageIcon(LoginInterface.class.getResource("/imagens/julius_principal.png")));
+        juliusLabel.setBounds(0, 0, 658, 695);
+        contentPane.add(juliusLabel);
+        
+        JLabel foco = new JLabel();
+        foco.setFocusable(true);
+        contentPane.add(foco);
+        
         JLabel tituloLabel = new JLabel("Recuperar Senha");
         tituloLabel.setBounds(0, 60, 422, 40);
         tituloLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -59,27 +64,39 @@ public class EsqueceuSenhaEmail extends JFrame {
         tituloLabel.setFont(new Font("Roboto Condensed", Font.BOLD, 30));
         mainPanel.add(tituloLabel);
         
-        JLabel instrucaoLabel = new JLabel("Digite seu e-mail cadastrado");
-        instrucaoLabel.setBounds(0, 120, 422, 30);
-        instrucaoLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        instrucaoLabel.setForeground(Color.BLACK);
-        instrucaoLabel.setFont(new Font("Roboto Condensed", Font.PLAIN, 16));
-        mainPanel.add(instrucaoLabel);
+        emailField = new JTextField("Digite seu email");
+        emailField.setForeground(Color.GRAY);
+        emailField.setBounds(111, 148, 200, 30);
+        mainPanel.add(emailField);
+
+        emailField.addFocusListener(new FocusAdapter() {
+           
+            public void focusGained(FocusEvent e) {
+                if (emailField.getText().equals("Digite seu email")) {
+                	emailField.setText("");
+                	emailField.setForeground(Color.BLACK);
+                }
+            }
+
+            public void focusLost(FocusEvent e) {
+                if (emailField.getText().isEmpty()) {
+                	emailField.setForeground(Color.GRAY);
+                	emailField.setText("Digite seu nome");
+                }
+            }
+        });
         
         JLabel emailLabel = new JLabel("E-mail");
-        emailLabel.setBounds(111, 200, 200, 14);
+        emailLabel.setBounds(111, 124, 200, 14);
         emailLabel.setForeground(Color.BLACK);
         mainPanel.add(emailLabel);
         
-        emailField = new JTextField();
-        emailField.setBounds(111, 220, 200, 30);
-        mainPanel.add(emailField);
-        
-        JButton continuarBtn = new JButton("CONTINUAR");
-        continuarBtn.setBounds(141, 280, 140, 35);
-        continuarBtn.setBackground(new Color(70, 70, 70));
-        continuarBtn.setForeground(Color.WHITE);
-        continuarBtn.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
+        JButton continuarBtn = new JButton("");
+        continuarBtn.setBounds(141, 205, 140, 35);
+        continuarBtn.setContentAreaFilled(false);   
+        continuarBtn.setBorderPainted(false);       
+        continuarBtn.setFocusPainted(false);        
+        continuarBtn.setOpaque(false);              
         continuarBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
@@ -109,7 +126,7 @@ public class EsqueceuSenhaEmail extends JFrame {
         mainPanel.add(continuarBtn);
         
         JButton voltarBtn = new JButton("Voltar ao login");
-        voltarBtn.setBounds(111, 330, 200, 20);
+        voltarBtn.setBounds(111, 261, 200, 20);
         voltarBtn.setBorderPainted(false);
         voltarBtn.setContentAreaFilled(false);
         voltarBtn.setForeground(new Color(0, 100, 200));
@@ -122,6 +139,11 @@ public class EsqueceuSenhaEmail extends JFrame {
             }
         });
         mainPanel.add(voltarBtn);
+        
+        JLabel continuarLabel = new JLabel("");
+        continuarLabel.setIcon(new ImageIcon(EsqueceuSenhaEmail.class.getResource("/imagens/BotaoContinuar.png")));
+        continuarLabel.setBounds(141, 205, 140, 35);
+        mainPanel.add(continuarLabel);
     }
     
     private void mostrarDialogoNovaSenha(String email) {
