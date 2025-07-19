@@ -1,5 +1,6 @@
 package com.projetolpoo.gui;
 
+import com.projetolpoo.business.TransacaoController;
 import java.awt.BorderLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -74,7 +75,7 @@ public class AdicionarTransacaoDialog extends JDialog {
         }
 
         try {
-            double valor = Double.parseDouble(valorStr);
+            int valor = Integer.parseInt(valorStr);
             if (valor <= 0) {
                  JOptionPane.showMessageDialog(this, "O valor deve ser um número positivo.", "Erro", JOptionPane.ERROR_MESSAGE);
                  return;
@@ -91,6 +92,8 @@ public class AdicionarTransacaoDialog extends JDialog {
             boolean isFixo = this.tipoTransacao.equals("Fixo");
 
             this.novaTransacao = new Transacao(descricao, valor, dataDaTransacao, isFixo);
+            TransacaoController transacaoController = new TransacaoController();
+            transacaoController.adicionarTransacao(novaTransacao);
             dispose();
             
         } catch (NumberFormatException ex) {

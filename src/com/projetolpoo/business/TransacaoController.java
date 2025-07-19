@@ -1,5 +1,6 @@
 package com.projetolpoo.business;
 
+import com.projetolpoo.database.AccountRepository;
 import java.util.Comparator;
 import java.util.List;
 
@@ -9,28 +10,54 @@ import org.jfree.data.time.TimeSeries;
 import com.projetolpoo.entities.Account;
 import com.projetolpoo.entities.Transacao;
 import com.projetolpoo.exception.BusinessException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class TransacaoController {
     
     private Account account; // A conta financeira cujas transações este controller gerencia
-
-    public TransacaoController(Account account) {
-        if (account == null) {
-            throw new IllegalArgumentException("Account não pode ser nula para o TransacaoController.");
-        }
-        this.account = account;
-    }
-
-    public void addTransacao(Transacao transaction) {
-        if (transaction == null) {
+    private final UserController userController = UserController.getInstanceUserController();
+    
+    public void adicionarTransacao(Transacao transacao) {
+        if (transacao == null) {
             throw new BusinessException("Transação não pode ser nula.");
         }
-        this.account.getTransacoes().add(transaction);
+        
+        if (transacao.getValor()==0){
+            throw new BusinessException("Os valores da transação não podem ser iguais a zero.");
+        }
+        AccountRepository accountRepository = new AccountRepository();
+        String dataString=transacao.getData().toString();
+        
+        accountRepository.inserirTransacao(transacao, dataString, userController.getUserInstance().getEmail());
         // *** PONTO DE PERSISTÊNCIA ***
         // Chamar seu TransactionRepository para salvar esta transação no DB.
         // Ex: transactionRepository.save(transaction, this.account.getId());
     }
-
+    
+    public List<Transacao> getAllTransacoes(String email){
+        List<Transacao> transacoes = new ArrayList();
+        try{
+            AccountRepository accountRepository = new AccountRepository();
+            ResultSet result=accountRepository.selecionarTransacao(email);
+            while (result.next()){
+                String nome=result.getString("descricao"); 
+                int valor=result.getInt("valor");
+                String dataString=result.getString("data");
+                LocalDate data = LocalDate.parse(dataString);
+                boolean isFixo=result.getBoolean("eh_fixo");
+                
+            Transacao transacaoInstance = new Transacao(nome, valor, data, isFixo);
+            transacoes.add(transacaoInstance);
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return transacoes;
+    }
+    
     /**
      * Remove uma transação da conta gerenciada.
      * @param transaction A Transacao a ser removida.

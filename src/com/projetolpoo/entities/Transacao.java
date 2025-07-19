@@ -8,14 +8,14 @@ public class Transacao implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String descricao; //Descreve o que é a transação. Ex: "Salário", "Aluguel"....
-    private double valor; // é o valor, Se for positivo será Receita, se for nagativo será DESPESA. 
+    private int valor; // é o valor, Se for positivo será Receita, se for nagativo será DESPESA. 
     private LocalDate data; // Guarda a Data de entrada do valor.
     private boolean isFixo;
 
     public Transacao() {
     }
 
-    public Transacao(String descricao, double valor, LocalDate data, boolean isFixo) {
+    public Transacao(String descricao, int valor, LocalDate data, boolean isFixo) {
         this.descricao = descricao;
         this.valor = valor;
         this.data = data;
@@ -30,11 +30,11 @@ public class Transacao implements Serializable {
         this.descricao = descricao;
     }
 
-    public double getValor() {
+    public int getValor() {
         return valor;
     }
 
-    public void setValor(double valor) {
+    public void setValor(int valor) {
         this.valor = valor;
     }
 

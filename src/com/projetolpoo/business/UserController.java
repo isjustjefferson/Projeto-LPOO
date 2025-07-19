@@ -1,6 +1,5 @@
 package com.projetolpoo.business;
 
-import com.projetolpoo.database.Repository;
 import com.projetolpoo.database.UserRepository;
 import com.projetolpoo.entities.User;
 import com.projetolpoo.exception.BusinessException;

@@ -2,6 +2,7 @@ package com.projetolpoo.database;
 
 import com.projetolpoo.entities.Account;
 import com.projetolpoo.entities.Meta;
+import com.projetolpoo.entities.Transacao;
 import com.projetolpoo.entities.User;
 import com.projetolpoo.exception.SystemException;
 import java.sql.Connection;
@@ -48,14 +49,50 @@ public class AccountRepository extends DataBaseConnection{
             ResultSet result = stmt.executeQuery();
             return result;
         }catch(Exception e){
-            e.printStackTrace();
-            //throw new SystemException("Erro no sistema", e);
-            return null;
+            throw new SystemException("Erro no sistema", e);
         }
     }
     
-    public boolean confirm(String string) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public int contaMeta(String email){
+        try{
+            Connection conn=connect();
+            PreparedStatement stmt = conn.prepareStatement("SELECT COUNT(*) FROM meta WHERE fk_user_email = ?");
+            ResultSet result=stmt.executeQuery();
+            
+            int total=0;
+            if (result.next()){
+                total = result.getInt(1);
+            }
+            return total;
+        }catch (Exception e){
+            throw new SystemException("Erro no sistema", e);
+        }
     }
     
+    public void inserirTransacao(Transacao transacao, String data, String email){
+        try{
+            Connection conn=connect();
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO transacao (descricao, valor, data, eh_fixo, fk_user_email) VALUES (?,?,?,?,?)");
+            stmt.setString(1, transacao.getDescricao());
+            stmt.setInt(2, transacao.getValor());
+            stmt.setString(3, data);
+            stmt.setBoolean(4, transacao.isFixo());
+            stmt.setString(5, email);
+            stmt.execute();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    
+    public ResultSet selecionarTransacao(String email){
+        try{
+            Connection conn=connect();
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM transacao WHERE fk_user_email = ?");
+            stmt.setString(1, email);
+            ResultSet result = stmt.executeQuery();
+            return result;
+        }catch(Exception e){
+            throw new SystemException("Erro no sistema", e);
+        }
+    }
 }

@@ -322,7 +322,7 @@ public class DashboardInterface extends JFrame {
         }
 	});
 
-    addRecVarBttn.setMargin(new Insets(2, 2, 2, 2));
+        addRecVarBttn.setMargin(new Insets(2, 2, 2, 2));
 	addRecVarBttn.setPreferredSize(new Dimension(1, 1));
 	addRecVarBttn.setBounds(407, 207, 27, 21);
 	receitasPanel.add(addRecVarBttn);

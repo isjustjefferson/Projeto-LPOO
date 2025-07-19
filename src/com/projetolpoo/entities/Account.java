@@ -1,6 +1,7 @@
 package com.projetolpoo.entities;
 
 import com.projetolpoo.business.MetaController;
+import com.projetolpoo.business.TransacaoController;
 import com.projetolpoo.business.UserController;
 import java.io.Serializable; 
 import java.util.ArrayList;
@@ -55,10 +56,14 @@ public class Account implements Serializable {
     }
 
     public List<Transacao> getTransacoes() {
+        TransacaoController transacaoController = new TransacaoController();
+        UserController userController = UserController.getInstanceUserController();
+        String email = userController.getUserInstance().getEmail();
+        transacoes = transacaoController.getAllTransacoes(email);
         return transacoes;
     }
 
     public void setTransacoes(List<Transacao> transacoes) {
-        this.transacoes = transacoes;
+        
     }
 }

@@ -13,10 +13,11 @@ public class UserRepository extends DataBaseConnection{
     public void insert(User user) {
         try{
             Connection conn=connect();
-            PreparedStatement stmt = conn.prepareStatement("INSERT INTO user(nome, email, senha) VALUES (?,?,?)");
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO user(nome, email, senha, saldo) VALUES (?,?,?,?)");
             stmt.setString(1,user.getNome());
             stmt.setString(2,user.getEmail());
             stmt.setString(3, user.getSenha());
+            stmt.setInt(4,0);
             stmt.execute();
         } catch (Exception e){
             throw new SystemException("Erro no sistema", e);
@@ -57,8 +58,7 @@ public class UserRepository extends DataBaseConnection{
             stmt.setString(2, email);
             stmt.execute();
         } catch (Exception e){
-            e.printStackTrace();
-            //throw new SystemException("Erro no sistema",e);
+            throw new SystemException("Erro no sistema",e);
         }
     }
     
@@ -110,6 +110,19 @@ public class UserRepository extends DataBaseConnection{
                 userController.setUserInstance(user);
             }
         }catch (Exception e){
+            throw new SystemException("Erro no sistema", e);
+        }
+    }
+    
+    public ResultSet selecionarSaldo(String email){
+        try{
+            Connection conn = connect();
+            PreparedStatement stmt = conn.prepareStatement("SELECT saldo FROM user WHERE email = ?");
+            stmt.setString(1, email);
+            ResultSet result = stmt.executeQuery();
+            System.out.println(result);
+            return result;
+        }catch(Exception e){
             throw new SystemException("Erro no sistema", e);
         }
     }
