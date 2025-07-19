@@ -150,12 +150,6 @@ public class DashboardInterface extends JFrame {
 	functionsDashboard.setBounds(10, 120, 100, 310);
 	contentPane.add(functionsDashboard);
 	functionsDashboard.setLayout(null);
-		
-	JButton relatorioBtn = new JButton("Relatório");
-	relatorioBtn.setMargin(new Insets(2, 2, 2, 2));
-	relatorioBtn.setBounds(7, 279, 85, 21);
-	functionsDashboard.add(relatorioBtn);
-	relatorioBtn.setFont(new Font("Tahoma", Font.PLAIN, 14));
 				
 	comboBoxMetas = new JComboBox<>();
 	comboBoxMetas.addActionListener(new ActionListener() {
